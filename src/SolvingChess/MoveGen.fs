@@ -9,16 +9,20 @@ open Check
 
 type Pieces =
     | King
-    | Knight
     | Queen
+    | Bishop
+    | Knight
+    | Rook
     | Pawn 
     | Undefined
 
 let pieceToString piece = 
     match piece with 
     | King -> "K"
-    | Knight -> "N"
     | Queen -> "Q"
+    | Bishop -> "B"
+    | Rook -> "R"
+    | Knight -> "N"
     | Pawn -> ""
     | Undefined -> ""
     
@@ -51,8 +55,26 @@ let rec private enumerateMoves piece from destinations =
                       {Piece=piece; From=from; To=sq; Promotion=Undefined }
                )
 
+// ------------------------------
+
 let whiteKingMoves position =
     enumerateMoves King position.WhiteKing ((kingAttacks position.WhiteKing) &&& ~~~(blackAttacks position) &&& ~~~(position.WhitePieces))
+
+let whiteQueenMoves position =
+    enumerateSquares position.WhiteQueens
+    |> Seq.map (fun(queen) -> enumerateMoves Queen queen ((queensAttacks queen position.WhitePieces position.BlackPieces)))
+    |> Seq.concat
+
+
+let whiteRookMoves position =
+    enumerateSquares position.WhiteRooks
+    |> Seq.map (fun(rook) -> enumerateMoves Rook rook ((rooksAttacks rook position.WhitePieces position.BlackPieces)))
+    |> Seq.concat
+
+let whiteBishopMoves position =
+    enumerateSquares position.WhiteBishops
+    |> Seq.map (fun(bishop) -> enumerateMoves Bishop bishop ((bishopsAttacks bishop position.WhitePieces position.BlackPieces)))
+    |> Seq.concat
 
 let whiteKnightsMoves (position : Position) =
     enumerateSquares position.WhiteKnights
@@ -69,13 +91,39 @@ let whitePawnMoves (position : Position) =
     |> Seq.concat
 
 let whiteMoves position : seq<Move> = seq {
+    yield! whiteQueenMoves position
+    yield! whiteRookMoves position
+    yield! whiteBishopMoves position
     yield! whiteKnightsMoves position
     yield! whitePawnMoves position
     yield! whiteKingMoves position
 }
 
+// -------------------------------
+
 let blackKingMoves position =
     enumerateMoves King position.BlackKing ((kingAttacks position.BlackKing) &&& ~~~(whiteAttacks position) &&& ~~~(position.BlackPieces))
+
+let blackQueenMoves position =
+    enumerateSquares position.BlackQueens
+    |> Seq.map (fun(queen) -> enumerateMoves Queen queen ((queensAttacks queen position.BlackPieces position.WhitePieces)))
+    |> Seq.concat
+
+
+let blackRookMoves position =
+    enumerateSquares position.BlackRooks
+    |> Seq.map (fun(rook) -> enumerateMoves Rook rook ((rooksAttacks rook position.BlackPieces position.WhitePieces)))
+    |> Seq.concat
+
+let blackBishopMoves position =
+    enumerateSquares position.BlackBishops
+    |> Seq.map (fun(bishop) -> enumerateMoves Bishop bishop ((bishopsAttacks bishop position.BlackPieces position.WhitePieces)))
+    |> Seq.concat
+
+let blackKnightsMoves (position : Position) =
+    enumerateSquares position.BlackKnights
+    |> Seq.map (fun(knight) -> enumerateMoves Knight knight ((knightsAttacks knight) &&& ~~~(position.BlackPieces)))
+    |> Seq.concat
 
 let blackPawnMoves (position : Position) =
     enumerateSquares position.BlackPawns 
@@ -90,9 +138,14 @@ let blackMoves position  =
     match (isCheck position) with
     | true -> blackKingMoves position
     | _ -> seq {
+                    yield! blackQueenMoves position
+                    yield! blackRookMoves position
+                    yield! blackBishopMoves position
+                    yield! blackKnightsMoves position
                     yield! blackPawnMoves position
                     yield! blackKingMoves position
                }
+// ------------------------------
 
 let moves position  =
     match position.SideToMove with
