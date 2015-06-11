@@ -26,5 +26,4 @@ let main argv =
     | Some(line) -> printmoves line
     | None -> printfn "There is no answer"
 
-
     0

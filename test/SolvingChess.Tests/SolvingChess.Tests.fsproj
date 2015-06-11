@@ -61,6 +61,7 @@
     <Compile Include="TestsOfCheck.fs" />
     <Compile Include="TestsOfMoveGen.fs" />
     <Compile Include="TestsOfMoveApply.fs" />
+    <Compile Include="Functionals.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -75,11 +76,6 @@
       <HintPath>..\..\packages\xunit.abstractions.2.0.0\lib\net35\xunit.abstractions.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <ProjectReference Include="..\SolvingChess\SolvingChess.fsproj">
-      <Name>SolvingChess</Name>
-      <Project>{9a4118e8-93c9-423c-94bf-6186bf1934c7}</Project>
-      <Private>True</Private>
-    </ProjectReference>
     <Reference Include="xunit.assert">
       <HintPath>..\..\packages\xunit.assert.2.1.0-beta2-build2981\lib\portable-net45+dnxcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.assert.dll</HintPath>
       <Private>True</Private>
@@ -88,6 +84,13 @@
       <HintPath>..\..\packages\xunit.extensibility.core.2.1.0-beta2-build2981\lib\portable-net45+dnxcore50+win+wpa81+wp80+monotouch+monoandroid+Xamarin.iOS\xunit.core.dll</HintPath>
       <Private>True</Private>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\SolvingChess\SolvingChess.fsproj">
+      <Name>SolvingChess</Name>
+      <Project>{9a4118e8-93c9-423c-94bf-6186bf1934c7}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

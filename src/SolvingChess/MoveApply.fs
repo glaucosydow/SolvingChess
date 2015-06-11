@@ -66,6 +66,3 @@ let applyMove move position =
 
     { partialResult with SideToMove = (oppositeSide position.SideToMove) }
 
-let K origin destiny = 
-    {Piece=King; From=origin; To=destiny; Promotion=Undefined}
-

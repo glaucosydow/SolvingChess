@@ -32,6 +32,16 @@ type Move =
     override x.ToString() = 
         sprintf "%s%s-%s%s" (pieceToString x.Piece) (sqToString x.From) (sqToString x.To) (promotionToString x.Promotion)
  
+let K origin destiny = 
+    {Piece=King; From=origin; To=destiny; Promotion=Undefined}
+
+let N origin destiny = 
+    {Piece=Knight; From=origin; To=destiny; Promotion=Undefined}
+
+let p origin destiny  =
+    let promotion = if ((isSet destiny (rank 0)) || (isSet destiny (rank 7))) then Queen else Undefined 
+    {Piece=Pawn; From=origin; To=destiny; Promotion=promotion}
+
 let rec private enumerateMoves piece from destinations =
     enumerateSquares destinations 
     |> Seq.map (fun(sq) -> 
