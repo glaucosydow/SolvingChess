@@ -24,8 +24,8 @@ type Position = {
         SideToMove: Sides;
 }
 with 
-    member x.WhitePieces = x.WhiteKing ||| x.WhitePawns ||| x.WhiteKnights ||| x.WhiteQueens
-    member x.BlackPieces = x.BlackKing ||| x.BlackPawns
+    member x.WhitePieces = x.WhiteKing ||| x.WhiteQueens ||| x.WhiteBishops ||| x.WhiteKnights ||| x.WhiteRooks ||| x.WhitePawns 
+    member x.BlackPieces = x.BlackKing ||| x.BlackQueens ||| x.BlackBishops ||| x.BlackKnights ||| x.BlackRooks ||| x.BlackPawns 
     member x.AllPieces = x.WhitePieces ||| x.BlackPieces
 
 

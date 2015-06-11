@@ -25,3 +25,27 @@ let ``puzzle 01``() =
     let current = mateline.Value
 
     Array.iter2 (fun (a: Move) b -> Assert.Equal(a, b)) expected current
+
+open Position
+open BitOperations
+
+[<Fact>]  
+let ``Detecting first occupied square in the north``() = 
+    let p = { 
+        EmptyBoard with 
+                    WhiteKing = H1;
+                    WhitePawns = A2 ||| C3 ||| D4 ||| F4 ||| H2;
+                    WhiteQueens = G5;
+                    WhiteBishops = G6;
+                    WhiteRooks = H5;
+                
+                    BlackKing = G7;
+                    BlackPawns = A7 ||| B6 ||| C7 ||| D5
+                    BlackKnights = G4 ||| H6
+                    BlackRooks = A8 ||| F8
+    }
+
+    Assert.Equal(H6 ||| H7 ||| H8, rayToNFromSquare H5)
+    let occupiedSquaresInTheNorth = (rayToNFromSquare H5) &&& p.AllPieces
+    Assert.Equal(H6, occupiedSquaresInTheNorth)
+    Assert.Equal(H6, (((rayToNFromSquare H5) &&& p.AllPieces).lsb() |> sqFromIndex))

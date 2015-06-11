@@ -12,3 +12,9 @@ let ``lsb returns the index of the least significant bit that is set``() =
 [<Fact>]
 let ``msb returns the index of the most significant bit that is set``() =
     Assert.Equal(msb (sq 'h' 8), 63)
+
+
+
+
+
+    

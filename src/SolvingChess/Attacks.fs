@@ -29,10 +29,10 @@ let rooksAttacks rooksPositions friends enemies =
     |> Seq.map(fun(sq) -> 
                     rankOfSquare sq ||| fileOfSquare sq 
                     |> except friends
-                    |> except (rayToNFromSquare ((rayToNFromSquare sq &&& allpieces).lsb() |> sqFromIndex))
-                    |> except (rayToEFromSquare ((rayToEFromSquare sq &&& allpieces).lsb() |> sqFromIndex))
-                    |> except (rayToSFromSquare ((rayToSFromSquare sq &&& allpieces).msb() |> sqFromIndex))
-                    |> except (rayToWFromSquare ((rayToWFromSquare sq &&& allpieces).msb() |> sqFromIndex))
+                    |> except (rayToNFromSquare (((rayToNFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
+                    |> except (rayToEFromSquare (((rayToEFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
+                    |> except (rayToSFromSquare (((rayToSFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
+                    |> except (rayToWFromSquare (((rayToWFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
               )
     |> Seq.fold (fun acc elem -> acc ||| elem) 0UL
 
@@ -42,10 +42,10 @@ let bishopsAttacks bishopsPositions friends enemies =
     |> Seq.map(fun(sq) -> 
                     diagonalNWOfSquare sq ||| diagonalNEOfSquare sq 
                     |> except friends
-                    |> except (rayToNEFromSquare ((rayToNEFromSquare sq &&& allpieces).lsb() |> sqFromIndex))
-                    |> except (rayToNWFromSquare ((rayToNWFromSquare sq &&& allpieces).lsb() |> sqFromIndex))
-                    |> except (rayToSEFromSquare ((rayToSEFromSquare sq &&& allpieces).msb() |> sqFromIndex))
-                    |> except (rayToSWFromSquare ((rayToSWFromSquare sq &&& allpieces).msb() |> sqFromIndex))
+                    |> except (rayToNEFromSquare (((rayToNEFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
+                    |> except (rayToNWFromSquare (((rayToNWFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
+                    |> except (rayToSEFromSquare (((rayToSEFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
+                    |> except (rayToSWFromSquare (((rayToSWFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
               )
     |> Seq.fold (fun acc elem -> acc ||| elem) 0UL
 

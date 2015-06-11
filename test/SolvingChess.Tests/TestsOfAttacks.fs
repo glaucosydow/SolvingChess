@@ -38,3 +38,24 @@ let ``Queen at g8 attacks h7``() =
     Assert.True(isSet H7 attacks)
 
 
+[<Fact>]  
+let ``Rook attacks considers obstacles``() = 
+    let p = { 
+        EmptyBoard with 
+                    WhiteKing = H1;
+                    WhitePawns = A2 ||| C3 ||| D4 ||| F4 ||| H2;
+                    WhiteQueens = G5;
+                    WhiteBishops = G6;
+                    WhiteRooks = H5;
+                
+                    BlackKing = G7;
+                    BlackPawns = A7 ||| B6 ||| C7 ||| D5
+                    BlackKnights = G4 ||| H6
+                    BlackRooks = A8 ||| F8
+    }
+
+    let result = rooksAttacks p.WhiteRooks p.WhitePieces p.BlackPieces
+    let expected = H4 ||| H3 ||| H6
+    Assert.Equal (expected, result) 
+
+
