@@ -13,7 +13,18 @@ let startpos = {
                 BlackPawns = G7 ||| F6
 }
 
+let printmoves history =
+    printfn "-----------------"
+    history 
+    |> Array.iter (fun move -> printfn "%s" (move.ToString()))
+
 [<EntryPoint>]
 let main argv = 
-    findMate startpos Array.empty
+    let mateline = (findMate startpos Array.empty)
+    
+    match mateline with 
+    | Some(line) -> printmoves line
+    | None -> printfn "There is no answer"
+
+
     0
