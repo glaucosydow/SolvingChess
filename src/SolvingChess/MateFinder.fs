@@ -27,7 +27,7 @@ let rec findMate position (history : array<Move>) =
 
         let mate = 
             continuations
-            |> Array.takeWhile (fun record -> record.Ms.Length = 0)
+            |> Array.takeWhile (fun record -> not record.hasResponses)
             |> Array.tryFind   (fun record -> record.checkMate)
 
         match mate with
@@ -59,23 +59,3 @@ let rec findMate position (history : array<Move>) =
     else
         None
             
-
-            
-//let blob() =
-//        moves position
-//        |> Seq.map(fun(move) -> {M=move; P=applyMove move position })
-//        |> Seq.sortBy (fun record -> record.Ms.Length) 
-//        |> Seq.iter(fun record -> 
-//                        let newhistory = Array.append history [| record.M |]
-//                        if record.Ms.Length = 0 && isCheckMate record.P then
-//                            printmoves newhistory
-//                        else
-//                            findMate record.P newhistory
-//                    )
-
-
-    
-
-
-
-

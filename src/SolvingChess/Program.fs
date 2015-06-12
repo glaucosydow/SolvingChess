@@ -27,11 +27,11 @@ let printmoves history =
 
 [<EntryPoint>]
 let main argv = 
-    moves startpos |> Seq.iter(fun move -> printfn "%s" (move.ToString()))
-//    let mateline = (findMate startpos Array.empty)
-//    
-//    match mateline with 
-//    | Some(line) -> printmoves line
-//    | None -> printfn "There is no answer"
+    //moves startpos |> Seq.iter(fun move -> printfn "%s" (move.ToString()))
+    let mateline = (findMate startpos Array.empty)
+    
+    match mateline with 
+    | Some(line) -> printmoves line
+    | None -> printfn "There is no answer"
 
     0

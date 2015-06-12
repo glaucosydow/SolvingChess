@@ -1,13 +1,13 @@
 ﻿module Functionals
 
-open Xunit
+open NUnit.Framework
 
 open BoardUnits
 open Position
 open MoveGen
 open MateFinder
 
-[<Fact>]
+[<Test>]
 let ``puzzle 01``() =
     let startpos = { 
         EmptyBoard with 
@@ -24,12 +24,12 @@ let ``puzzle 01``() =
     let expected = [| N G4 H6; p G7 H6; p G6 G7; K H8 H7; p G7 G8 |]
     let current = mateline.Value
 
-    Array.iter2 (fun (a: Move) b -> Assert.Equal(a, b)) expected current
+    Array.iter2 (fun (a: Move) b -> Assert.AreEqual(a, b)) expected current
 
 open Position
 open BitOperations
 
-[<Fact>]  
+[<Test>]  
 let ``Detecting first occupied square in the north``() = 
     let p = { 
         EmptyBoard with 
@@ -45,7 +45,7 @@ let ``Detecting first occupied square in the north``() =
                     BlackRooks = A8 ||| F8
     }
 
-    Assert.Equal(H6 ||| H7 ||| H8, rayToNFromSquare H5)
+    Assert.AreEqual(H6 ||| H7 ||| H8, rayToNFromSquare H5)
     let occupiedSquaresInTheNorth = (rayToNFromSquare H5) &&& p.AllPieces
-    Assert.Equal(H6, occupiedSquaresInTheNorth)
-    Assert.Equal(H6, (((rayToNFromSquare H5) &&& p.AllPieces).lsb() |> sqFromIndex))
+    Assert.AreEqual(H6, occupiedSquaresInTheNorth)
+    Assert.AreEqual(H6, (((rayToNFromSquare H5) &&& p.AllPieces).lsb() |> sqFromIndex))

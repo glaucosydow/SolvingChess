@@ -1,17 +1,17 @@
 ﻿module TestOfBitsOperations
 
-open Xunit
+open NUnit.Framework
 open BitOperations
 open BoardUnits
 
-[<Fact>]
+[<Test>]
 let ``lsb returns the index of the least significant bit that is set``() =
-    Assert.Equal(lsb(1UL <<< 31), 31)
-    Assert.Equal((1UL <<< 31).lsb(), 31)
+    Assert.AreEqual(lsb(1UL <<< 31), 31)
+    Assert.AreEqual((1UL <<< 31).lsb(), 31)
 
-[<Fact>]
+[<Test>]
 let ``msb returns the index of the most significant bit that is set``() =
-    Assert.Equal(msb (sq 'h' 8), 63)
+    Assert.AreEqual(msb (sq 'h' 8), 63)
 
 
 
