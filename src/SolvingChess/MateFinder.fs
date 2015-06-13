@@ -18,7 +18,7 @@ with
 
 let rec findMate position depth = 
     
-    if depth < 5 then 
+    if depth < 7 then 
 
         let continuations = 
             moves position
@@ -58,7 +58,12 @@ let rec findMate position depth =
                     future |> Array.head
             
             | White -> 
-                let mateLine = future |> Array.tryFind(fun f -> f <> None)
+                let mateLine = 
+                    future 
+                    |> Array.where(fun f -> f <> None)
+                    |> Array.sortBy(fun f -> f.Value.Length)
+                    |> Array.tryHead
+
                 match mateLine with 
                     | None -> None
                     | Some(x) -> x
