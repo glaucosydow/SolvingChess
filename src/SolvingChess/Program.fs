@@ -23,9 +23,9 @@ let startpos = {
         EmptyBoard with 
                     WhiteKing = F7;
                     WhitePawns = F5 ||| G6;
-                    WhiteKnights = G4;
                     BlackKing = H8;
-                    BlackPawns = G7 ||| F6
+                    BlackPawns = G7 ||| E5;
+                    SideToMove=White
     }
 
 let printmoves history =

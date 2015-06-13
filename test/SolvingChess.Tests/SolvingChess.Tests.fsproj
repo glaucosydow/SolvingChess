@@ -59,7 +59,7 @@
     <Compile Include="TestsOfCheck.fs" />
     <Compile Include="TestsOfMoveGen.fs" />
     <Compile Include="TestsOfMoveApply.fs" />
-    <Compile Include="Functionals.fs" />
+    <Compile Include="Puzzles.fs" />
     <Content Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

@@ -55,7 +55,9 @@ let rec findMate position depth =
                 if isThereEscapes then
                     None
                 else
-                    future |> Array.head
+                    future 
+                    |> Array.sortByDescending(fun f -> f.Value.Length)
+                    |> Array.head
             
             | White -> 
                 let mateLine = 

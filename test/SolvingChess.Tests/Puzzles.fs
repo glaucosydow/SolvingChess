@@ -1,4 +1,4 @@
-﻿module Functionals
+﻿module Puzzles
 
 open NUnit.Framework
 
@@ -24,7 +24,23 @@ let ``puzzle 01``() =
     let expected = [| N G4 H6; p G7 H6; p G6 G7; K H8 H7; p G7 G8 |]
     let current = mateline.Value
 
-    Array.iter2 (fun (a: Move) b -> Assert.AreEqual(a, b)) expected current
+    Assert.AreEqual(expected, current)
+
+[<Test>]
+let ``puzzle 02``() =
+    let startpos = { 
+        EmptyBoard with 
+                    WhiteKing = F7;
+                    WhitePawns = F5 ||| G6;
+                    BlackKing = H8;
+                    BlackPawns = G7 ||| E5;
+    }
+
+    let mateline = (findMate startpos 0)
+    let expected = [| p F5 F6; p G7 F6; p G6 G7; K H8 H7; p G7 G8; K H7 H6; Q G8 G6 |]
+    
+    Assert.AreEqual(expected, mateline.Value)
+
 
 open Position
 open BitOperations
