@@ -13,15 +13,17 @@ with
     member x.Ms = (moves x.P) |> Seq.toArray
     member x.hasResponses = x.Ms.Length > 0
     member x.checkMate = x.Ms.Length = 0 && isCheckMate x.P
+    member x.irrelevant = (x.P.SideToMove = Black && x.Ms.Length > 3)
+    override x.ToString() = x.M.ToString()
 
-
-
-let rec findMate position (history : array<Move>) = 
-    if history.Length < 5 then 
+let rec findMate position depth = 
+    
+    if depth < 5 then 
 
         let continuations = 
             moves position
             |> Seq.map(fun(move) -> {M=move; P=applyMove move position })
+            |> Seq.where  (fun record -> not record.irrelevant)
             |> Seq.sortBy (fun record -> record.Ms.Length) 
             |> Seq.toArray
 
@@ -31,7 +33,7 @@ let rec findMate position (history : array<Move>) =
             |> Array.tryFind   (fun record -> record.checkMate)
 
         match mate with
-        | Some(record) ->  Some (Array.append history [| record.M |])
+        | Some(record) ->  Some ([| record.M |])
         | None ->
             let alternatives = 
                 continuations 
@@ -39,7 +41,12 @@ let rec findMate position (history : array<Move>) =
 
             let future = 
                     alternatives
-                    |> Array.map (fun alternative -> findMate alternative.P (Array.append history [| alternative.M |]))
+                    |> Array.map (fun alternative -> 
+                                    let line = findMate alternative.P (depth + 1)
+                                    match line with 
+                                    | Some(x) -> Some(Array.append [| alternative.M |] x)
+                                    | None -> None
+                                  )
 
             match position.SideToMove with
             | Black ->

@@ -54,13 +54,18 @@ let queensAttacks queensPositions friends enemies =
 
 
 let whiteAttacks position = 
-    whitePawnsAttacks position.WhitePawns |||
-    knightsAttacks position.WhiteKnights  |||
-    queensAttacks position.WhiteQueens position.WhitePieces position.BlackPieces |||
-    kingAttacks position.WhiteKing        
+    queensAttacks       position.WhiteQueens  position.WhitePieces position.BlackPieces |||
+    rooksAttacks        position.WhiteRooks   position.WhitePieces position.BlackPieces |||
+    bishopsAttacks      position.WhiteBishops position.WhitePieces position.BlackPieces |||
+    knightsAttacks      position.WhiteKnights  |||
+    whitePawnsAttacks   position.WhitePawns |||
+    kingAttacks         position.WhiteKing        
     
 
 let blackAttacks position =
-    blackPawnsAttacks position.BlackPawns ||| 
-    kingAttacks position.BlackKing
-    
+    queensAttacks       position.BlackQueens  position.BlackPieces position.WhitePieces |||
+    rooksAttacks        position.BlackRooks   position.BlackPieces position.WhitePieces |||
+    bishopsAttacks      position.BlackBishops position.BlackPieces position.WhitePieces |||
+    knightsAttacks      position.BlackKnights  |||
+    blackPawnsAttacks   position.BlackPawns |||
+    kingAttacks         position.BlackKing

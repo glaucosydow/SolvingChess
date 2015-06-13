@@ -18,7 +18,7 @@ let ``puzzle 01``() =
                     BlackPawns = G7 ||| F6
     }
 
-    let mateline = (findMate startpos Array.empty)
+    let mateline = (findMate startpos 0)
     Assert.True(mateline <> None)
 
     let expected = [| N G4 H6; p G7 H6; p G6 G7; K H8 H7; p G7 G8 |]
