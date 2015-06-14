@@ -61,7 +61,7 @@ let rec private enumerateMoves piece from destinations =
 // ------------------------------
 
 let whiteKingMoves position =
-    enumerateMoves King position.WhiteKing ((kingAttacks position.WhiteKing) &&& ~~~(blackAttacks position) &&& ~~~(position.WhitePieces))
+    enumerateMoves King position.WhiteKing ((kingAttacks position.WhiteKing) &&& ~~~(blackAttacks position false) &&& ~~~(position.WhitePieces))
 
 let whiteQueenMoves position =
     enumerateSquares position.WhiteQueens
@@ -104,8 +104,8 @@ let whiteMoves position : seq<Move> = seq {
 
 // -------------------------------
 
-let blackKingMoves position =
-    enumerateMoves King position.BlackKing ((kingAttacks position.BlackKing) &&& ~~~(whiteAttacks position) &&& ~~~(position.BlackPieces))
+let blackKingMoves position inCheck=
+    enumerateMoves King position.BlackKing ((kingAttacks position.BlackKing) &&& ~~~(whiteAttacks position inCheck) &&& ~~~(position.BlackPieces))
 
 let blackQueenMoves position =
     enumerateSquares position.BlackQueens
@@ -139,14 +139,14 @@ let blackPawnMoves (position : Position) =
 
 let blackMoves position  =
     match (isCheck position) with
-    | true -> blackKingMoves position
+    | true -> blackKingMoves position true
     | _ -> seq {
                     yield! blackQueenMoves position
                     yield! blackRookMoves position
                     yield! blackBishopMoves position
                     yield! blackKnightsMoves position
                     yield! blackPawnMoves position
-                    yield! blackKingMoves position
+                    yield! blackKingMoves position false
                }
 // ------------------------------
 

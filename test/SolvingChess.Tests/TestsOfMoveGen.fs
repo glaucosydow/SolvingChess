@@ -51,3 +51,12 @@ let ``Detects black pawn advance and pawn capture``() =
     let m = moves position |> Seq.toArray
     Assert.AreEqual([| p E5 E4; p G7 F6 |], m)
 
+[<Test>]
+let ``King at D7 escapes from queen at D5 check``() =
+    let position = {
+        EmptyBoard with BlackKing=D7; WhiteQueens=D5; SideToMove=Black
+    }
+    let m = moves position |> Seq.toArray
+    let k = K D7
+    Assert.AreEqual([| k C7; k E7; k C8; k E8 |], m)
+

@@ -53,19 +53,27 @@ let queensAttacks queensPositions friends enemies =
     (rooksAttacks queensPositions friends enemies) ||| (bishopsAttacks queensPositions friends enemies)
 
 
-let whiteAttacks position = 
-    queensAttacks       position.WhiteQueens  position.WhitePieces position.BlackPieces |||
-    rooksAttacks        position.WhiteRooks   position.WhitePieces position.BlackPieces |||
-    bishopsAttacks      position.WhiteBishops position.WhitePieces position.BlackPieces |||
+let whiteAttacks (position:Position) ignoresBlackKing =
+    let enemies = if not ignoresBlackKing 
+                  then position.BlackPieces 
+                  else position.BlackPieces &&& ~~~(position.BlackKing)
+
+    queensAttacks       position.WhiteQueens  position.WhitePieces enemies |||
+    rooksAttacks        position.WhiteRooks   position.WhitePieces enemies |||
+    bishopsAttacks      position.WhiteBishops position.WhitePieces enemies |||
     knightsAttacks      position.WhiteKnights  |||
     whitePawnsAttacks   position.WhitePawns |||
     kingAttacks         position.WhiteKing        
     
 
-let blackAttacks position =
-    queensAttacks       position.BlackQueens  position.BlackPieces position.WhitePieces |||
-    rooksAttacks        position.BlackRooks   position.BlackPieces position.WhitePieces |||
-    bishopsAttacks      position.BlackBishops position.BlackPieces position.WhitePieces |||
+let blackAttacks (position:Position) ignoresWhiteKing =
+    let enemies = if not ignoresWhiteKing
+                  then position.WhitePieces 
+                  else position.WhitePieces &&& ~~~(position.WhiteKing)
+
+    queensAttacks       position.BlackQueens  position.BlackPieces enemies |||
+    rooksAttacks        position.BlackRooks   position.BlackPieces enemies |||
+    bishopsAttacks      position.BlackBishops position.BlackPieces enemies |||
     knightsAttacks      position.BlackKnights  |||
     blackPawnsAttacks   position.BlackPawns |||
     kingAttacks         position.BlackKing
