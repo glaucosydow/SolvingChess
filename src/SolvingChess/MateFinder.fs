@@ -16,9 +16,9 @@ with
     member x.irrelevant = (x.P.SideToMove = Black && x.Ms.Length > 3)
     override x.ToString() = x.M.ToString()
 
-let rec findMate position depth = 
+let rec findMate position depth maxdepth = 
     
-    if depth < 7 then 
+    if depth < maxdepth then 
 
         let continuations = 
             moves position
@@ -42,7 +42,7 @@ let rec findMate position depth =
             let future = 
                     alternatives
                     |> Array.map (fun alternative -> 
-                                    let line = findMate alternative.P (depth + 1)
+                                    let line = findMate alternative.P (depth + 1) maxdepth
                                     match line with 
                                     | Some(x) -> Some(Array.append [| alternative.M |] x)
                                     | None -> None
