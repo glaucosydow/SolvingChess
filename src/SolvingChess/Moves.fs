@@ -1,4 +1,4 @@
-﻿module MoveGen
+﻿module Moves
 
 open BitOperations
 open BoardShifter
@@ -48,6 +48,32 @@ let N origin destiny =
 let p origin destiny  =
     let promotion = if ((isSet destiny (rank 0)) || (isSet destiny (rank 7))) then Queen else Undefined 
     {Piece=Pawn; From=origin; To=destiny; Promotion=promotion}
+
+let applyMove move position =
+    let inline a move bitboard =
+        if (isSet move.From bitboard) then 
+            bitboard &&& ~~~(move.From) ||| move.To
+        else
+            if (isSet move.To bitboard) then bitboard &&& ~~~(move.To) else bitboard
+
+    {
+        WhiteKing =    a move position.WhiteKing
+        WhiteQueens =  a move position.WhiteQueens ||| (if move.Promotion=Queen then move.To &&& (rank 7) else 0UL)
+        WhiteBishops = a move position.WhiteBishops
+        WhiteKnights = a move position.WhiteKnights
+        WhiteRooks   = a move position.WhiteRooks
+        WhitePawns   = a move position.WhitePawns &&& ~~~(rank 7)
+
+        BlackKing =    a move position.BlackKing
+        BlackQueens =  a move position.BlackQueens ||| (if move.Promotion=Queen then move.To  &&& (rank 0) else 0UL)
+        BlackBishops = a move position.BlackBishops
+        BlackKnights = a move position.BlackKnights
+        BlackRooks   = a move position.BlackRooks
+        BlackPawns   = a move position.BlackPawns &&& ~~~(rank 0)
+        
+        SideToMove = (if position.SideToMove=Black then White else Black)
+    }
+
 
 let rec private enumerateMoves piece from destinations =
     enumerateSquares destinations 
@@ -137,23 +163,25 @@ let blackPawnMoves (position : Position) =
        )
     |> Seq.concat
 
-let blackMoves position  =
-    match (isCheck position) with
-    | true -> blackKingMoves position true
-    | _ -> seq {
-                    yield! blackQueenMoves position
-                    yield! blackRookMoves position
-                    yield! blackBishopMoves position
-                    yield! blackKnightsMoves position
-                    yield! blackPawnMoves position
-                    yield! blackKingMoves position false
-               }
+let blackMoves position  = seq {
+    yield! blackQueenMoves position
+    yield! blackRookMoves position
+    yield! blackBishopMoves position
+    yield! blackKnightsMoves position
+    yield! blackPawnMoves position
+    yield! blackKingMoves position true
+}
 // ------------------------------
 
 let moves position  =
-    match position.SideToMove with
-    | White -> whiteMoves position
-    | Black -> blackMoves position
- 
+    let alternatives = match position.SideToMove with
+                        | White -> whiteMoves position
+                        | Black -> blackMoves position
+    
+    alternatives 
+    |> Seq.where(fun move ->
+                    let np = applyMove move position
+                    not (isKingUnderAttack position.SideToMove np)
+                ) 
 
     

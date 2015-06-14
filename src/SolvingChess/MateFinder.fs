@@ -1,8 +1,7 @@
 ﻿module MateFinder
 
 open Position
-open MoveGen
-open MoveApply
+open Moves
 open Check
 
 type Record = { 
@@ -13,17 +12,20 @@ with
     member x.Ms = (moves x.P) |> Seq.toArray
     member x.hasResponses = x.Ms.Length > 0
     member x.checkMate = x.Ms.Length = 0 && isCheckMate x.P
-    member x.irrelevant = (x.P.SideToMove = Black && x.Ms.Length > 3)
     override x.ToString() = x.M.ToString()
 
 let rec findMate position depth maxdepth = 
     
-    if depth < maxdepth then 
+    if depth < maxdepth then
+
+        let c1 = 
+            moves position
+            |> Seq.map(fun(move) -> {M=move; P=applyMove move position })
+            |> Seq.toArray
 
         let continuations = 
             moves position
             |> Seq.map(fun(move) -> {M=move; P=applyMove move position })
-            |> Seq.where  (fun record -> not record.irrelevant)
             |> Seq.sortBy (fun record -> record.Ms.Length) 
             |> Seq.toArray
 

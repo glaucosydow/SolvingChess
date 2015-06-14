@@ -4,10 +4,13 @@ open BitOperations
 open Position
 open Attacks
 
-let isCheck position = 
-    match position.SideToMove with 
+let isKingUnderAttack side position =
+    match side with 
     | White -> position.WhiteKing <> 0UL && (isSet position.WhiteKing (blackAttacks position false))
     | Black -> position.BlackKing <> 0UL && (isSet position.BlackKing (whiteAttacks position false))
+
+let isCheck position = 
+    isKingUnderAttack position.SideToMove position
 
 let private couldKingMove position =
     match position.SideToMove with 

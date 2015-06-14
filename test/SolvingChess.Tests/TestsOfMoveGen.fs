@@ -3,7 +3,7 @@
 open NUnit.Framework
 open BoardUnits
 open Position
-open MoveGen
+open Moves
 
 [<Test>]
 let ``Detects white pawns advances``() =

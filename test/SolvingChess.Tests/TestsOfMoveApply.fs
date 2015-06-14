@@ -3,8 +3,7 @@
 open NUnit.Framework
 open BoardUnits
 open Position
-open MoveGen
-open MoveApply
+open Moves
 
 [<Test>]
 let ``Capture of pawn with knight``() =
@@ -28,15 +27,15 @@ let ``Simple black king move``() =
     let newposition = applyMove (K H8 H7) position
     Assert.AreEqual({ EmptyBoard with BlackKing=H7; SideToMove=White}, newposition)
 
-[<Test>]
-let ``Detects white pawn advance and promotion sequence``() =
-    let position = { EmptyBoard with WhiteKing=F7; WhitePawns=F5 ||| G7; BlackKing=H8; BlackPawns=F6 ||| H6; SideToMove=Black }
-    let move = moves position |> Seq.head
-    Assert.AreEqual((K H8 H7), move)
-    let newPosition = applyMove move position
-    let expected = { EmptyBoard with WhiteKing=F7; WhitePawns=F5 ||| G7; BlackKing=H7; BlackPawns=F6 ||| H6 }
-    Assert.AreEqual(expected, newPosition)
-    let lastmove = moves newPosition |> Seq.head
-    Assert.AreEqual({Piece=Pawn; From=G7; To=G8; Promotion=Queen}, lastmove)
+//[<Test>]
+//let ``Detects white pawn advance and promotion sequence``() =
+//    let position = { EmptyBoard with WhiteKing=F7; WhitePawns=F5 ||| G7; BlackKing=H8; BlackPawns=F6 ||| H6; SideToMove=Black }
+//    let move = moves position |> Seq.head
+//    Assert.AreEqual((K H8 H7), move)
+//    let newPosition = applyMove move position
+//    let expected = { EmptyBoard with WhiteKing=F7; WhitePawns=F5 ||| G7; BlackKing=H7; BlackPawns=F6 ||| H6 }
+//    Assert.AreEqual(expected, newPosition)
+//    let lastmove = moves newPosition |> Seq.head
+//    Assert.AreEqual({Piece=Pawn; From=G7; To=G8; Promotion=Queen}, lastmove)
 
 

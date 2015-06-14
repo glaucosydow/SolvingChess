@@ -4,7 +4,7 @@ open NUnit.Framework
 
 open BoardUnits
 open Position
-open MoveGen
+open Moves
 open MateFinder
 
 [<Test>]

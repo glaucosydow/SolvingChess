@@ -55,8 +55,7 @@
     <Compile Include="Position.fs" />
     <Compile Include="Attacks.fs" />
     <Compile Include="Check.fs" />
-    <Compile Include="MoveGen.fs" />
-    <Compile Include="MoveApply.fs" />
+    <Compile Include="Moves.fs" />
     <Compile Include="MateFinder.fs" />
     <Compile Include="Program.fs" />
     <None Include="App.config" />

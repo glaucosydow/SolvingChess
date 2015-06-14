@@ -2,7 +2,7 @@
 
 open BoardUnits
 open Position
-open MoveGen
+open Moves
 open MateFinder
 
 let startpos = { 
@@ -19,14 +19,6 @@ let startpos = {
                 BlackRooks = A8 ||| F8
 }
 
-//let startpos = { 
-//        EmptyBoard with 
-//                    WhiteKing = F7;
-//                    WhitePawns = F5 ||| G6;
-//                    BlackKing = H8;
-//                    BlackPawns = G7 ||| E5;
-//                    SideToMove=White
-//    }
 
 let printmoves history =
     printfn "-----------------"
@@ -37,7 +29,7 @@ let printmoves history =
 [<EntryPoint>]
 let main argv = 
     //moves startpos |> Seq.iter(fun move -> printfn "%s" (move.ToString()))
-    let mateline = (findMate startpos 0 7)
+    let mateline = (findMate startpos 0 9)
     
     match mateline with 
     | Some(line) -> printmoves line
