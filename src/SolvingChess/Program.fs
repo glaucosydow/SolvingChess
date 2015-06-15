@@ -34,12 +34,12 @@ open Check
 let main argv = 
 //    moves startpos |> Seq.iter(fun move -> printfn "%s" (move.ToString()))
 //    printfn "%A" (isCheckMate startpos)
-//    let mateline = (findMate startpos 0 8)
-//    
-//    match mateline with 
-//    | Some(line) -> printmoves line
-//    | None -> printfn "There is no answer"
-//
-//    printfn "number of calls: %d" numberOfCalls
+    let mateline = (findMate startpos 0 15)
+    
+    match mateline with 
+    | Some(line) -> printmoves line
+    | None -> printfn "There is no answer"
+
+    printfn "number of calls: %d" numberOfCalls
 
     0

@@ -10,7 +10,11 @@ type Record = {
 }
 with 
     member x.Ms = (moves x.P) |> Seq.toArray
+
     member x.hasResponses = x.Ms.Length > 0
+    member x.check = (isCheck x.P)
+    member x.withNoKingMoves = not (Array.exists (fun move -> move.Piece = King) x.Ms )
+    
     member x.checkMate = x.Ms.Length = 0 && isCheckMate x.P
     override x.ToString() = x.M.ToString()
 
@@ -36,17 +40,15 @@ let rec findMate position depth maxdepth =
 
         match mate with
         | Some(record) ->  
+            //printfn "%s%s++" (String.replicate (depth + 1) " ") (record.M.ToString())
             Some ([| record.M |])
         | None ->
             let alternatives = 
                 continuations 
                 |> Array.skipWhile (fun alternative -> not alternative.hasResponses)
 
-
             match position.SideToMove with
             | Black ->
-                
-                
                 let rec explore (enumerator:IEnumerator<Move[] option>): Move[] option =
                     if enumerator.MoveNext() 
                     then
@@ -65,6 +67,7 @@ let rec findMate position depth maxdepth =
                 let future = 
                     alternatives
                     |> Seq.map (fun alternative -> 
+                                    //printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())
                                     let line = findMate alternative.P (depth + 1) maxdepth
                                     match line with 
                                     | Some(x) -> Some(Array.append [| alternative.M |] x)
@@ -74,27 +77,30 @@ let rec findMate position depth maxdepth =
                 explore (future.GetEnumerator())
 
             | White -> 
+                let rec explore (enumerator:IEnumerator<Record>) (maxdepth) : Move[] option =
+                    if enumerator.MoveNext() 
+                    then
+                        let move = enumerator.Current.M
+                        //printfn "%s%s" (String.replicate (depth + 1) " ") (move.ToString())
+                        let line1 = findMate enumerator.Current.P (depth + 1) maxdepth
+                        let line2 = explore enumerator (if line1 = None then maxdepth else depth + line1.Value.Length)
+                        match line1, line2 with 
+                        | Some(x), None -> Some(Array.append [| move |] x)
+                        | None, Some(x) -> Some(x)
+                        | Some(x), Some(y) -> Some (if x.Length < y.Length then (Array.append [| move |] x) else y)
+                        | None, None -> None
+                    else
+                        None
+
                 let future = 
-                    alternatives
-                    |> Array.where(fun alternative -> alternative.Ms.Length <= 6)
-                    |> Array.map (fun alternative -> 
-                                    //if (depth <= 6) then printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())                                    
-                                    let line = findMate alternative.P (depth + 1) maxdepth
-                                    match line with 
-                                    | Some(x) -> Some(Array.append [| alternative.M |] x)
-                                    | None -> None
-                                  )
+                    alternatives 
+                    |> Seq.where(fun alternative -> 
+                                    alternative.Ms.Length < 3 
+                                    || alternative.check 
+                                    //|| (alternative.M.Piece <> Pawn && alternative.withNoKingMoves)
+                                 )
 
-                let mateLine = 
-                    future 
-                    |> Array.where(fun f -> f <> None)
-                    |> Array.sortBy(fun f -> f.Value.Length)
-                    |> Array.tryHead
-
-                match mateLine with 
-                    | None -> None
-                    | Some(x) -> x
-    
+                explore (future.GetEnumerator()) maxdepth
     else
         None
             
