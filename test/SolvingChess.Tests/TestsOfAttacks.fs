@@ -55,7 +55,7 @@ let ``Rook attacks considers obstacles``() =
     }
 
     let result = rooksAttacks p.WhiteRooks p.WhitePieces p.BlackPieces
-    let expected = H4 ||| H3 ||| H6
+    let expected = H4 ||| H3 ||| H2 ||| H6 ||| G5
     Assert.AreEqual (expected, result) 
 
 

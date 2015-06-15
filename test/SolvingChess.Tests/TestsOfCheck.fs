@@ -31,3 +31,9 @@ let ``White queen covered by the king mate``() =
 let ``White queen in g8 checks black king in h7``() =
     let position = { EmptyBoard with WhiteKing=F7; WhitePawns=F5; WhiteQueens=G8; BlackKing=H7; BlackPawns=F6 ||| H6 ; SideToMove = Black}
     Assert.True(isCheck position)
+
+
+[<Test>]
+let ``White queen covered by the bishop mate``() =
+    let position = { EmptyBoard with BlackKing=D8; WhiteKing=D7; WhiteBishops=E6; SideToMove=Black}
+    Assert.True(isCheckMate position)

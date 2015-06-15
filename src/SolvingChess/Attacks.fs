@@ -28,7 +28,7 @@ let rooksAttacks rooksPositions friends enemies =
     enumerateSquares rooksPositions
     |> Seq.map(fun(sq) -> 
                     rankOfSquare sq ||| fileOfSquare sq 
-                    |> except friends
+                    |> except sq
                     |> except (rayToNFromSquare (((rayToNFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
                     |> except (rayToEFromSquare (((rayToEFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
                     |> except (rayToSFromSquare (((rayToSFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
@@ -41,7 +41,7 @@ let bishopsAttacks bishopsPositions friends enemies =
     enumerateSquares bishopsPositions
     |> Seq.map(fun(sq) -> 
                     diagonalNWOfSquare sq ||| diagonalNEOfSquare sq 
-                    |> except friends
+                    |> except sq
                     |> except (rayToNEFromSquare (((rayToNEFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
                     |> except (rayToNWFromSquare (((rayToNWFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
                     |> except (rayToSEFromSquare (((rayToSEFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
@@ -64,7 +64,6 @@ let whiteAttacks (position:Position) ignoresBlackKing =
     knightsAttacks      position.WhiteKnights  |||
     whitePawnsAttacks   position.WhitePawns |||
     kingAttacks         position.WhiteKing        
-    
 
 let blackAttacks (position:Position) ignoresWhiteKing =
     let enemies = if not ignoresWhiteKing

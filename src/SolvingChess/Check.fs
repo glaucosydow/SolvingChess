@@ -18,6 +18,7 @@ let private couldKingMove position =
     | Black -> ((kingAttacks position.BlackKing) &&& ~~~(position.BlackPieces) &&& ~~~(whiteAttacks position false)) <> 0UL
 
 let isCheckMate position =
+    let a = (isCheck position)
     (isCheck position) && not (couldKingMove position)
 
 
