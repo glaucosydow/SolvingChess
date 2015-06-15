@@ -76,7 +76,7 @@ let rec findMate position depth maxdepth =
             | White -> 
                 let future = 
                     alternatives
-                    |> Array.where(fun alternative -> alternative.Ms.Length <= 3)
+                    |> Array.where(fun alternative -> alternative.Ms.Length <= 6)
                     |> Array.map (fun alternative -> 
                                     //if (depth <= 6) then printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())                                    
                                     let line = findMate alternative.P (depth + 1) maxdepth
