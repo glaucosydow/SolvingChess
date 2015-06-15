@@ -30,6 +30,33 @@ let ``puzzle 01``() =
 let ``puzzle 02``() =
     let startpos = { 
         EmptyBoard with 
+                    WhiteKing = H1;
+                    WhitePawns = A2 ||| C3 ||| D4 ||| F4 ||| H2;
+                    WhiteQueens = G5;
+                    WhiteBishops = G6;
+                    WhiteRooks = H5;
+                
+                    BlackKing = G7;
+                    BlackPawns = A7 ||| B6 ||| C7 ||| D5;
+                    BlackKnights = G4 ||| H6;
+                    BlackRooks = A8 ||| F8;
+
+                    SideToMove = White
+    }
+
+    let mateline = (findMate startpos 0 8)
+    Assert.True(mateline <> None)
+
+    let expected = [| B G6 F5; K G7 H8; R H5 H6; N G4 H6; Q G5 H6; K H8 G8; Q H6 H7 |]
+    let current = mateline.Value
+
+    Assert.AreEqual(expected, current)
+
+
+[<Test>]
+let ``puzzle x02``() =
+    let startpos = { 
+        EmptyBoard with 
                     WhiteKing = F7;
                     WhitePawns = F5 ||| G6;
                     BlackKing = H8;

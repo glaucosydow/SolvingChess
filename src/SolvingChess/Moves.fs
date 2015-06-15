@@ -39,6 +39,12 @@ type Move =
 let K origin destiny = 
     {Piece=King; From=origin; To=destiny; Promotion=Undefined}
 
+let R origin destiny = 
+    {Piece=Rook; From=origin; To=destiny; Promotion=Undefined}
+
+let B origin destiny = 
+    {Piece=Bishop; From=origin; To=destiny; Promotion=Undefined}
+
 let Q origin destiny = 
     {Piece=Queen; From=origin; To=destiny; Promotion=Undefined}
 
