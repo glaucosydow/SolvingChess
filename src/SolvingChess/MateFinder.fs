@@ -14,11 +14,7 @@ with
     member x.hasResponses = x.Ms.Length > 0
     member x.check = (isCheck x.P)
     member x.withNoKingMoves = not (Array.exists (fun move -> move.Piece = King) x.Ms )
-    
     member x.checkMate = x.Ms.Length = 0 && isCheckMate x.P
-
-    member x.score = 
-        -x.Ms.Length + (if x.check then 1 else 0) + (if x.withNoKingMoves then 1 else 0)
 
     override x.ToString() = x.M.ToString()
 
@@ -96,17 +92,30 @@ let rec findMate position depth maxdepth =
                     else
                         None
 
-                let future = 
+                let f1 = 
                     alternatives
-                    |> Array.sortByDescending (fun alternative -> alternative.score)
-                    |> Seq.where(fun alternative -> alternative.Ms.Length <= 3)
-//                    |> Seq.where(fun alternative -> 
-//                                    alternative.Ms.Length < 3 
-//                                    || alternative.check 
-//                                    //|| (alternative.M.Piece <> Pawn && alternative.withNoKingMoves)
-//                                 )
+                    |> Seq.where(fun alternative -> alternative.Ms.Length = 1)
 
-                explore (future.GetEnumerator()) maxdepth
+                let r1 = explore (f1.GetEnumerator()) maxdepth
+
+                if r1 = None
+                then
+                    let f2 = 
+                        alternatives
+                        |> Seq.where(fun alternative -> alternative.Ms.Length > 1 && alternative.check)
+                    let r2 = explore (f2.GetEnumerator()) maxdepth
+                    if r2 = None
+                    then
+                        let f3 = 
+                            alternatives
+                            |> Seq.where(fun alternative -> alternative.Ms.Length > 1 && (not alternative.check) && alternative.withNoKingMoves)
+                        explore (f3.GetEnumerator()) maxdepth
+                    else
+                        r2
+                else
+                    r1
+
+
     else
         None
             
