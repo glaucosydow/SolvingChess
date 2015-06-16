@@ -22,6 +22,22 @@ let mutable numberOfCalls = 0
 
 open System.Collections.Generic
 
+let mateInGlance position =
+    let p = {position with SideToMove=White}
+    
+    let continuations = 
+        moves p
+        |> Seq.map(fun(move) -> {M=move; P=applyMove move p })
+        |> Seq.sortBy (fun record -> record.Ms.Length) 
+        |> Seq.toArray
+
+    let mate = 
+        continuations
+        |> Array.takeWhile (fun record -> not record.hasResponses)
+        |> Array.tryFind   (fun record -> record.checkMate)
+
+    not (mate=None)
+
 let rec findMate position depth maxdepth = 
     numberOfCalls <- if depth = 0 then 0 else numberOfCalls + 1
        
@@ -40,7 +56,7 @@ let rec findMate position depth maxdepth =
 
         match mate with
         | Some(record) ->  
-            printfn "%s%s++" (String.replicate (depth + 1) " ") (record.M.ToString())
+            //printfn "%s%s++" (String.replicate (depth + 1) " ") (record.M.ToString())
             Some ([| record.M |])
         | None ->
             let alternatives = 
@@ -67,7 +83,7 @@ let rec findMate position depth maxdepth =
                 let future = 
                     alternatives
                     |> Seq.map (fun alternative -> 
-                                    printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())
+                                    //printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())
                                     let line = findMate alternative.P (depth + 1) maxdepth
                                     match line with 
                                     | Some(x) -> Some(Array.append [| alternative.M |] x)
@@ -81,7 +97,7 @@ let rec findMate position depth maxdepth =
                     if enumerator.MoveNext() 
                     then
                         let move = enumerator.Current.M
-                        printfn "%s%s" (String.replicate (depth + 1) " ") (move.ToString())
+                        //printfn "%s%s" (String.replicate (depth + 1) " ") (move.ToString())
                         let line1 = findMate enumerator.Current.P (depth + 1) maxdepth
                         let line2 = explore enumerator (if line1 = None then maxdepth else depth + line1.Value.Length)
                         match line1, line2 with 
@@ -92,30 +108,21 @@ let rec findMate position depth maxdepth =
                     else
                         None
 
-                let f1 = 
-                    alternatives
-                    |> Seq.where(fun alternative -> alternative.Ms.Length = 1)
 
-                let r1 = explore (f1.GetEnumerator()) maxdepth
-
-                if r1 = None
-                then
-                    let f2 = 
-                        alternatives
-                        |> Seq.where(fun alternative -> alternative.Ms.Length > 1 && alternative.check)
-                    let r2 = explore (f2.GetEnumerator()) maxdepth
-                    if r2 = None
+                let e (predicate: (Record->bool)) pre =
+                    if pre = None
                     then
-                        let f3 = 
+                        let f = 
                             alternatives
-                            |> Seq.where(fun alternative -> alternative.Ms.Length > 1 && (not alternative.check) && alternative.withNoKingMoves)
-                        explore (f3.GetEnumerator()) maxdepth
+                            |> Seq.where(predicate)
+                        explore (f.GetEnumerator()) maxdepth
                     else
-                        r2
-                else
-                    r1
+                        pre
 
-
+                e (fun alternative -> alternative.Ms.Length = 1) None
+                |> e (fun alternative -> alternative.Ms.Length = 2) 
+                |> e (fun alternative -> alternative.Ms.Length > 2 && alternative.check)
+                |> e (fun alternative -> alternative.Ms.Length > 2 && (not alternative.check) && alternative.withNoKingMoves)
     else
         None
             
