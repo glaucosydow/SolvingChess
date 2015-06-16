@@ -10,6 +10,11 @@ let kingAttacks (kingPosition : Bitboard) =
     cs -1 -1 ||| cs -1  0 ||| cs -1 1 ||| cs  0 -1 ||| cs  0 1 |||
                  cs  1 -1 ||| cs  1 0 ||| cs  1 1 
 
+let kingArea (kingPosition: Bitboard) =
+    let ka = kingAttacks kingPosition
+    let a = ka.chessShift -1 0 ||| ka.chessShift 1 0
+    a.chessShift 0 -1 ||| a.chessShift 0 1
+
 let whitePawnsAttacks (whitePawnsPositions : Bitboard) =
     let cs = whitePawnsPositions.chessShift
     (cs 1 -1 ||| cs 1 1) 

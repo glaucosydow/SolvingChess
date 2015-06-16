@@ -1,6 +1,7 @@
 ﻿module MateFinder
 
 open Position
+open Attacks
 open Moves
 open Check
 
@@ -109,20 +110,28 @@ let rec findMate position depth maxdepth =
                         None
 
 
-                let e (predicate: (Record->bool)) pre =
+                let e (a: IEnumerable<Record>) pre =
                     if pre = None
                     then
-                        let f = 
-                            alternatives
-                            |> Seq.where(predicate)
-                        explore (f.GetEnumerator()) maxdepth
+                        explore (a.GetEnumerator()) maxdepth
                     else
                         pre
 
-                e (fun alternative -> alternative.Ms.Length = 1) None
-                |> e (fun alternative -> alternative.Ms.Length = 2) 
-                |> e (fun alternative -> alternative.Ms.Length > 2 && alternative.check)
-                |> e (fun alternative -> alternative.Ms.Length > 2 && (not alternative.check) && alternative.withNoKingMoves)
+                //let miga  = alternatives |> Array.where(fun a -> (mateInGlance a.P))
+                //let nmiga =    alternatives |> Array.where(fun a -> not (mateInGlance a.P))
+                let blackKingArea = kingArea position.BlackKing
+
+                let kaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) = a.M.To )
+                let nkaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) <> a.M.To )
+
+                e    (kaAlternatives |> Seq.where(fun alternative -> alternative.Ms.Length = 1)) None
+                |> e (nkaAlternatives |> Seq.where(fun alternative -> alternative.Ms.Length = 1)) 
+                |> e (kaAlternatives |> Seq.where(fun alternative -> alternative.Ms.Length = 2)) 
+                |> e (nkaAlternatives |> Seq.where(fun alternative -> alternative.Ms.Length = 2)) 
+                |> e (kaAlternatives |> Seq.where(fun alternative -> alternative.Ms.Length > 2 && alternative.check))
+                |> e (nkaAlternatives |> Seq.where(fun alternative -> alternative.Ms.Length > 2 && alternative.check))
+                |> e (kaAlternatives |> Seq.where(fun alternative -> alternative.Ms.Length > 2 && (not alternative.check) && alternative.withNoKingMoves))
+                |> e (nkaAlternatives |> Seq.where(fun alternative -> alternative.Ms.Length > 2 && (not alternative.check) && alternative.withNoKingMoves))
     else
         None
             
