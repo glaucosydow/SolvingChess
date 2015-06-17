@@ -38,6 +38,13 @@ let ``Queen at g8 attacks h7``() =
     Assert.True(isSet H7 attacks)
 
 
+[<Test>]
+let ``Queen at c6 attacks a8``() =
+    let queens = C6
+    let attacks = queensAttacks queens queens 0UL
+    Assert.True(isSet A8 attacks)
+
+
 [<Test>]  
 let ``Rook attacks considers obstacles``() = 
     let p = { 

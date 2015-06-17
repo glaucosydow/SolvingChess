@@ -59,7 +59,9 @@ let rec findMate position depth maxdepth =
         | Some(record) ->  
             match position.SideToMove with
             | Black -> None
-            | White -> Some ([| record.M |])
+            | White ->
+                 //printfn "%s%s" (String.replicate (depth + 1) " ") (record.ToString())
+                 Some ([| record.M |])
         | None ->
             let alternatives = 
                 continuations 

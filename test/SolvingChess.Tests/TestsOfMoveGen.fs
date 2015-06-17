@@ -60,3 +60,32 @@ let ``King at D7 escapes from queen at D5 check``() =
     let k = K D7
     Assert.AreEqual([| k C7; k E7; k C8; k E8 |], m)
 
+[<Test>]
+let ``Queen at C6 can go to A8``()=
+    let position = {
+        EmptyBoard with WhiteQueens = C6
+    }
+    let m = moves position |> Seq.toArray
+    Assert.Contains(Q C6 A8, m)
+
+
+[<Test>]
+let ``Queen at C6 can go to A8 - full position``()=
+    let position = { 
+        EmptyBoard with 
+                    WhiteKing = E1;
+                    WhiteQueens = C6;
+                    WhitePawns = F6;
+                    WhiteBishops = E4;
+                    WhiteKnights = D5;
+                
+                    BlackKing = B8;
+                    BlackPawns = A7 ||| C7 ||| F7;
+                    BlackBishops = D3;
+                    BlackRooks = E6 ||| C8;
+
+                    SideToMove = White
+    }
+    let m = moves position |> Seq.toArray
+    Assert.Contains(Q C6 A8, m)
+

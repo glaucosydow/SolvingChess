@@ -7,17 +7,16 @@ open MateFinder
 
 let startpos = { 
     EmptyBoard with 
-                WhiteKing = G1;
-                WhitePawns = A2 ||| C2 ||| E3 ||| F2 ||| G2 ||| H2;
-                WhiteBishops = A3;
-                WhiteRooks = B1 |||D1;
-                WhiteKnights = G7;
+                WhiteKing = E1;
+                WhiteQueens = C6;
+                WhitePawns = F6;
+                WhiteBishops = E4;
+                WhiteKnights = D5;
                 
-                BlackKing = F7;
-                BlackPawns = A6 ||| B7 ||| E5 ||| F6 ||| G6 ||| H7;
-                BlackBishops = C3 ||| C8;
-                BlackRooks = A8 ||| H8;
-                BlackKnights = G8;
+                BlackKing = B8;
+                BlackPawns = A7 ||| C7 ||| F7;
+                BlackBishops = D3;
+                BlackRooks = E6 ||| C8;
 
                 SideToMove = White
 }
