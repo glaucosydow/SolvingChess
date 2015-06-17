@@ -154,4 +154,35 @@ let ``puzzle 05``() =
     Assert.AreEqual(expected, current)
 ````
 
+![puzzle #06](/assets/06.jpg)
+[<Test>]
+let ``puzzle 06``() =
+    let startpos = { 
+        EmptyBoard with 
+                    WhiteKing = G1;
+                    WhiteQueens = C2;
+                    WhitePawns = B3 ||| F2 ||| G3 ||| H2;
+                    WhiteBishops = B2 ||| G2;
+                    WhiteRooks = C1 ||| D1;
+                
+                    BlackKing = F7;
+                    BlackQueens = D8
+                    BlackPawns = B7 ||| D5 ||| G7 ||| H6;
+                    BlackBishops = E7 ||| C8;
+                    BlackKnights = D7;
+                    BlackRooks = A8 ||| E8;
+
+                    SideToMove = White
+    }
+
+    let mateline = (findMate startpos 0 8)
+    printfn "%d" numberOfCalls
+    Assert.True(mateline <> None)
+
+    let expected = [| B G2 D5; K F7 F8; Q C2 G6; N D7 E5; B B2 E5; Q D8 D5; Q G6 G7 |]
+    let current = mateline.Value
+
+    Assert.AreEqual(expected, current)
+````
+
 Feel free to suggest code improvements. I will work to make it better. ;)
