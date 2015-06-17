@@ -155,6 +155,7 @@ let ``puzzle 05``() =
 ````
 
 ![puzzle #06](/assets/06.jpg)
+````fsharp
 [<Test>]
 let ``puzzle 06``() =
     let startpos = { 
