@@ -49,7 +49,7 @@ let ``puzzle 02``() =
     Assert.True(mateline <> None)
     printfn "%d" numberOfCalls
 
-    let expected = [| B G6 F5; K G7 H8; R H5 H6; N G4 H6; Q G5 H6; K H8 G8; Q H6 H7 |]
+    let expected = [| B G6 F5; K G7 F7; Q G5 G6; K F7 E7; Q G6 E6; K E7 D8; Q E6 D7 |]
     let current = mateline.Value
 
     Assert.AreEqual(expected, current)

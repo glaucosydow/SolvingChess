@@ -1,5 +1,5 @@
 ﻿module Position
-
+open BitOperations
 open BoardUnits
 
 type Sides =
@@ -27,6 +27,22 @@ with
     member x.WhitePieces = x.WhiteKing ||| x.WhiteQueens ||| x.WhiteBishops ||| x.WhiteKnights ||| x.WhiteRooks ||| x.WhitePawns 
     member x.BlackPieces = x.BlackKing ||| x.BlackQueens ||| x.BlackBishops ||| x.BlackKnights ||| x.BlackRooks ||| x.BlackPawns 
     member x.AllPieces = x.WhitePieces ||| x.BlackPieces
+    
+    member x.score = 
+        let white = x.WhiteQueens.popcount()  * 9UL +
+                    x.WhiteBishops.popcount() * 3UL +
+                    x.WhiteKnights.popcount() * 3UL +
+                    x.WhiteRooks.popcount()   * 5UL +
+                    x.WhitePawns.popcount()   * 1UL
+
+        let black = x.BlackQueens.popcount()  * 9UL +
+                    x.BlackBishops.popcount() * 3UL +
+                    x.BlackKnights.popcount() * 3UL +
+                    x.BlackRooks.popcount()   * 5UL +
+                    x.BlackPawns.popcount()   * 1UL
+
+        white - black
+
 
 
 let EmptyBoard = {

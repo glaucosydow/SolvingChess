@@ -26,6 +26,17 @@ let rec msb (value: uint64) =
     | _ -> 0
     
 
+let private h01 = 72340172838076673UL   // 0x0101010101010101;
+let private m1  = 6148914691236517205UL // 0x5555555555555555;
+let private m2  = 3689348814741910323UL // 0x3333333333333333;
+let private m4  = 1085102592571150095UL // 0x0f0f0f0f0f0f0f0f;
+
+let popcount (value: uint64) =
+     let x1 = value - ((value >>> 1) &&& m1)
+     let x2 = (x1 &&& m2) + ((x1 >>> 2) &&& m2)
+     let x3 = (x2 + (x2 >>> 4)) &&& m4
+     ((x3 * h01) >>> 56)
+
 let inline except bitsToRemove bitmap =
     bitmap &&& (~~~bitsToRemove)
 
@@ -35,4 +46,4 @@ let inline isSet (bits:uint64) bitmap =
 type System.UInt64 with 
     member x.lsb() = lsb x
     member x.msb() = msb x
-  
+    member x.popcount() = popcount x
