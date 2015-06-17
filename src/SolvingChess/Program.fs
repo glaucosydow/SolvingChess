@@ -24,6 +24,7 @@ let startpos = {
 }
 
 
+
 let printmoves history =
     printfn "-----------------"
     history 

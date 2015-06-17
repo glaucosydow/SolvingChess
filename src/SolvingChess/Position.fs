@@ -29,17 +29,17 @@ with
     member x.AllPieces = x.WhitePieces ||| x.BlackPieces
     
     member x.score = 
-        let white = x.WhiteQueens.popcount()  * 9UL +
-                    x.WhiteBishops.popcount() * 3UL +
-                    x.WhiteKnights.popcount() * 3UL +
-                    x.WhiteRooks.popcount()   * 5UL +
-                    x.WhitePawns.popcount()   * 1UL
+        let white = x.WhiteQueens.popcount()  * 9 +
+                    x.WhiteBishops.popcount() * 3 +
+                    x.WhiteKnights.popcount() * 3 +
+                    x.WhiteRooks.popcount()   * 5 +
+                    x.WhitePawns.popcount()   * 1
 
-        let black = x.BlackQueens.popcount()  * 9UL +
-                    x.BlackBishops.popcount() * 3UL +
-                    x.BlackKnights.popcount() * 3UL +
-                    x.BlackRooks.popcount()   * 5UL +
-                    x.BlackPawns.popcount()   * 1UL
+        let black = x.BlackQueens.popcount()  * 9 +
+                    x.BlackBishops.popcount() * 3 +
+                    x.BlackKnights.popcount() * 3 +
+                    x.BlackRooks.popcount()   * 5 +
+                    x.BlackPawns.popcount()   * 1
 
         white - black
 

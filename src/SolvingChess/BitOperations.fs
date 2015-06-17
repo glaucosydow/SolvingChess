@@ -35,7 +35,7 @@ let popcount (value: uint64) =
      let x1 = value - ((value >>> 1) &&& m1)
      let x2 = (x1 &&& m2) + ((x1 >>> 2) &&& m2)
      let x3 = (x2 + (x2 >>> 4)) &&& m4
-     ((x3 * h01) >>> 56)
+     (int)((x3 * h01) >>> 56)
 
 let inline except bitsToRemove bitmap =
     bitmap &&& (~~~bitsToRemove)

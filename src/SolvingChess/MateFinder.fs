@@ -68,7 +68,12 @@ let rec private internalFindMate position depth maxdepth =
                                 Some(
                                     if a.Length > b.Length 
                                     then a
-                                    elif a.Length = b.Length then (if ((Array.last a).P.score) > ((Array.last b).P.score) then b else a)
+                                    elif a.Length = b.Length then 
+                                        (
+                                            if ((Array.last a).P.score) > ((Array.last b).P.score) 
+                                            then b 
+                                            else a
+                                        )
                                     else b
                                 )
                     else
@@ -97,7 +102,19 @@ let rec private internalFindMate position depth maxdepth =
                         match line1, line2 with 
                         | Some(x), None -> Some(Array.append [| move |] x)
                         | None, Some(x) -> Some(x)
-                        | Some(x), Some(y) -> Some (if x.Length < y.Length then (Array.append [| move |] x) else y)
+                        | Some(x), Some(y) -> 
+                            Some (
+                                let rx = (Array.append [| move |] x)
+                                if rx.Length < y.Length 
+                                then rx 
+                                elif rx.Length = y.Length then 
+                                        (
+                                            if ((Array.last rx).P.score) > ((Array.last y).P.score) 
+                                            then rx 
+                                            else y
+                                        )
+                                else y
+                            )
                         | None, None -> None
                     else
                         None
@@ -119,10 +136,12 @@ let rec private internalFindMate position depth maxdepth =
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 1)) 
                 |> e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length = 2)) 
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 2)) 
+
                 |> e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length > 2 && a.check))
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && a.check))
                 |> e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
+                
     else
         None
             

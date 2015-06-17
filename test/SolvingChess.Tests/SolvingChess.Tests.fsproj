@@ -61,6 +61,7 @@
     <Compile Include="TestsOfMoveApply.fs" />
     <Compile Include="Puzzles.fs" />
     <Content Include="packages.config" />
+    <Compile Include="TestsOfPosition.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
