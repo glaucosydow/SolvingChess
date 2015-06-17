@@ -19,9 +19,11 @@ with
 
     override x.ToString() = x.M.ToString()
 
-let mutable numberOfCalls = 0
 
 open System.Collections.Generic
+open BitOperations
+
+let mutable numberOfCalls = 0
 
 let rec private internalFindMate position depth maxdepth = 
     numberOfCalls <- if depth = 0 then 0 else numberOfCalls + 1
@@ -131,8 +133,8 @@ let rec private internalFindMate position depth maxdepth =
 
                 let kaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) = a.M.To )
                 let nkaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) <> a.M.To )
-
-                e    (kaAlternatives |> Seq.where (fun a -> a.Ms.Length = 1)) None
+                
+                e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length = 1))  None
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 1)) 
                 |> e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length = 2)) 
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 2)) 

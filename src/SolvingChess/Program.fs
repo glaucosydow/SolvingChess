@@ -40,5 +40,5 @@ let main argv =
     | Some(line) -> printmoves line
     | None -> printfn "There is no answer"
 
-    printfn "number of calls: %d" numberOfCalls
+    //printfn "number of calls: %d" numberOfCalls
     0
