@@ -3,7 +3,7 @@ SolvingChess
 
 I started this project to learn F#. My goal is to create a very basic chess puzzle solver.
 
-Current version is good enough to solve this problems:
+Current version is good enough to solve these puzzles:
 
 ![puzzle #01](/assets/01.jpg)
 
