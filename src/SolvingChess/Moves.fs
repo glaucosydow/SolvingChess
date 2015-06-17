@@ -55,6 +55,7 @@ let p origin destiny  =
     let promotion = if ((isSet destiny (rank 0)) || (isSet destiny (rank 7))) then Queen else Undefined 
     {Piece=Pawn; From=origin; To=destiny; Promotion=promotion}
 
+
 let applyMove move position =
     let inline a move bitboard =
         if (isSet move.From bitboard) then 
