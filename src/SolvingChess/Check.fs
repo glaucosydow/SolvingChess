@@ -14,11 +14,10 @@ let isCheck position =
 
 let private couldKingMove position =
     match position.SideToMove with 
-    | White -> ((kingAttacks position.WhiteKing) &&& ~~~(position.WhitePieces) &&& ~~~(blackAttacks position false)) <> 0UL
-    | Black -> ((kingAttacks position.BlackKing) &&& ~~~(position.BlackPieces) &&& ~~~(whiteAttacks position false)) <> 0UL
+    | White -> ((kingAttacks position.WhiteKing) &&& ~~~(position.WhitePieces) &&& ~~~(blackAttacks position true)) <> 0UL
+    | Black -> ((kingAttacks position.BlackKing) &&& ~~~(position.BlackPieces) &&& ~~~(whiteAttacks position true)) <> 0UL
 
 let isCheckMate position =
-    let a = (isCheck position)
     (isCheck position) && not (couldKingMove position)
 
 

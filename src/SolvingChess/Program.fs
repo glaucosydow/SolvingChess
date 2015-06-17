@@ -23,23 +23,20 @@ let startpos = {
 }
 
 
-
 let printmoves history =
     printfn "-----------------"
     history 
     |> Array.iter (fun move -> printfn "%s" (move.ToString()))
 
 open Check
+open Attacks
 [<EntryPoint>]
 let main argv = 
-//    moves startpos |> Seq.iter(fun move -> printfn "%s" (move.ToString()))
-//    printfn "%A" (isCheckMate startpos)
+    //moves startpos |> Seq.iter(fun move -> printfn "%s" (move.ToString()))
     let mateline = (findMate startpos 0 15)
-    
     match mateline with 
     | Some(line) -> printmoves line
     | None -> printfn "There is no answer"
 
     printfn "number of calls: %d" numberOfCalls
-
     0

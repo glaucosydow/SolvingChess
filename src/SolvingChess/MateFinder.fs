@@ -15,7 +15,7 @@ with
     member x.hasResponses = x.Ms.Length > 0
     member x.check = (isCheck x.P)
     member x.withNoKingMoves = not (Array.exists (fun move -> move.Piece = King) x.Ms )
-    member x.checkMate = x.Ms.Length = 0 && isCheckMate x.P
+    member x.checkMate = x.Ms.Length = 0 && x.check
 
     override x.ToString() = x.M.ToString()
 
@@ -57,8 +57,9 @@ let rec findMate position depth maxdepth =
 
         match mate with
         | Some(record) ->  
-            //printfn "%s%s++" (String.replicate (depth + 1) " ") (record.M.ToString())
-            Some ([| record.M |])
+            match position.SideToMove with
+            | Black -> None
+            | White -> Some ([| record.M |])
         | None ->
             let alternatives = 
                 continuations 

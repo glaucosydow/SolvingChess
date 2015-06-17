@@ -37,3 +37,22 @@ let ``White queen in g8 checks black king in h7``() =
 let ``White queen covered by the bishop mate``() =
     let position = { EmptyBoard with BlackKing=D8; WhiteKing=D7; WhiteBishops=E6; SideToMove=Black}
     Assert.True(isCheckMate position)
+
+[<Test>]
+let ``Two rooks mate``()=
+    let position = { 
+        EmptyBoard with 
+                    WhiteKing = G1;
+                    WhitePawns = A2 ||| C2 ||| E3 ||| F2 ||| G2 ||| H2;
+                    WhiteBishops = A3;
+                    WhiteRooks = E7 |||D8;
+                    WhiteKnights = G7;
+                
+                    BlackKing = F8;
+                    BlackPawns = A6  ||| E5 ||| F6 ||| G6 ||| H7;
+                    BlackBishops = C3 ||| C8;
+                    BlackRooks = A8 ||| H8;
+
+                    SideToMove = Black
+    }
+    Assert.True(isCheckMate position)
