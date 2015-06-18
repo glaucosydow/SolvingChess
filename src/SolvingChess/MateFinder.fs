@@ -83,40 +83,32 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
                 explore None 0 alternatives
 
             | White -> 
-                let rec explore (enumerator:IEnumerator<Record>) (maxdepth) : Record[] option =
-                    if enumerator.MoveNext() 
-                    then
+                let rec explore accum (enumerator:IEnumerator<Record>) (maxdepth) : Record[] option =
+                    if enumerator.MoveNext() then
                         let move = enumerator.Current
-                        //printfn "%s%s" (String.replicate (depth + 1) " ") (move.ToString())
-                        let line1 = internalFindMate enumerator.Current (depth + 1) maxdepth
-                        let line2 = explore enumerator (if line1 = None then maxdepth else depth + line1.Value.Length)
-                        match line1, line2 with 
-                        | Some(x), None -> Some(Array.append [| move |] x)
-                        | None, Some(x) -> Some(x)
-                        | Some(x), Some(y) -> 
-                            Some (
+                        let line = internalFindMate move (depth + 1) maxdepth
+                        let newaccum = 
+                            match line, accum with 
+                            | None, Some(y) -> Some(y)
+                            | Some(x), None -> Some(Array.append [| move |] x)
+                            | Some(x), Some(y) -> 
                                 let rx = (Array.append [| move |] x)
-                                if rx.Length < y.Length 
-                                then rx 
-                                elif rx.Length = y.Length then 
-                                        (
-                                            if ((Array.last rx).P.score) > ((Array.last y).P.score) 
-                                            then rx 
-                                            else y
-                                        )
-                                else y
-                            )
-                        | None, None -> None
+                                Some (
+                                    if   rx.Length < y.Length then rx 
+                                    elif rx.Length > y.Length then y
+                                    else if ((Array.last rx).P.score) > ((Array.last y).P.score) then rx else y
+                                )
+                            | None, None -> None
+
+                        explore newaccum enumerator (if newaccum = None then maxdepth else depth + newaccum.Value.Length)
                     else
-                        None
+                        accum
 
 
                 let e (a: IEnumerable<Record>) pre =
-                    if pre = None
-                    then
-                        explore (a.GetEnumerator()) maxdepth
-                    else
-                        pre
+                    match pre with
+                    | None -> explore None (a.GetEnumerator()) maxdepth
+                    | Some(x) -> Some(x)
 
                 let blackKingArea = kingArea seed.P.BlackKing
 
@@ -127,7 +119,6 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 1)) 
                 |> e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length = 2)) 
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 2)) 
-
                 |> e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length > 2 && a.check))
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && a.check))
                 |> e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
