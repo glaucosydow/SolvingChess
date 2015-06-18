@@ -16,7 +16,7 @@ type Record(m,p) =
     member x.hasResponses = x.Ms.Length > 0
     member x.check = chk
     member x.withNoKingMoves = not (Array.exists (fun future -> future.M.Piece = King) x.Ms )
-    member x.checkMate = x.Ms.Length = 0 && x.check
+    member x.checkMate = x.Ms.Length = 0 && chk
     override x.ToString() = x.M.ToString()
 
 
@@ -115,13 +115,13 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
                 let kaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) = a.M.To )
                 let nkaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) <> a.M.To )
                 
-                e (kaAlternatives |> Seq.where    (fun a -> a.Ms.Length = 1))  None
+                e    (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length = 1))  None
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 1)) 
-                |> e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length = 2)) 
+                |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length = 2)) 
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 2)) 
-                |> e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length > 2 && a.check))
+                |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length > 2 && a.check))
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && a.check))
-                |> e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
+                |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
                 
     else
