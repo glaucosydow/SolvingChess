@@ -5,18 +5,17 @@ open Attacks
 open Moves
 open Check
 
-type Record = { 
-    M: Move; 
-    P: Position; 
-}
-with 
-    member x.Ms = (moves x.P) |> Seq.toArray
+type Record(m,p) =  
+    let ms = (moves p) |> Seq.toArray
+    let chk = (isCheck p)
 
+    member x.M = m
+    member x.P = p
+    member x.Ms = ms
     member x.hasResponses = x.Ms.Length > 0
-    member x.check = (isCheck x.P)
+    member x.check = chk
     member x.withNoKingMoves = not (Array.exists (fun move -> move.Piece = King) x.Ms )
     member x.checkMate = x.Ms.Length = 0 && x.check
-
     override x.ToString() = x.M.ToString()
 
 
@@ -32,7 +31,7 @@ let rec private internalFindMate position depth maxdepth =
 
         let continuations = 
             moves position
-            |> Seq.map(fun(move) -> {M=move; P=applyMove move position })
+            |> Seq.map(fun(move) -> Record(move, applyMove move position))
             |> Seq.sortBy (fun record -> record.Ms.Length) 
             |> Seq.toArray
 
@@ -134,7 +133,7 @@ let rec private internalFindMate position depth maxdepth =
                 let kaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) = a.M.To )
                 let nkaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) <> a.M.To )
                 
-                e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length = 1))  None
+                e (kaAlternatives |> Seq.where    (fun a -> a.Ms.Length = 1))  None
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 1)) 
                 |> e (kaAlternatives |> Seq.where (fun a -> a.Ms.Length = 2)) 
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 2)) 
@@ -152,3 +151,4 @@ let rec findMate position depth maxdepth =
     | None -> None
     | Some(line) -> Some (line |> Array.map(fun record -> record.M) )
     
+
