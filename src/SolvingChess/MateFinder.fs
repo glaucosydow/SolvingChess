@@ -6,7 +6,7 @@ open Moves
 open Check
 
 type Record(m,p) =  
-    let ms = (moves p) |> Seq.toArray
+    let ms = (futures p) |> Seq.toArray
     let chk = (isCheck p)
 
     member x.M = m
@@ -15,7 +15,7 @@ type Record(m,p) =
     
     member x.hasResponses = x.Ms.Length > 0
     member x.check = chk
-    member x.withNoKingMoves = not (Array.exists (fun move -> move.Piece = King) x.Ms )
+    member x.withNoKingMoves = not (Array.exists (fun future -> future.M.Piece = King) x.Ms )
     member x.checkMate = x.Ms.Length = 0 && x.check
     override x.ToString() = x.M.ToString()
 
@@ -32,7 +32,7 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
 
         let continuations = 
             seed.Ms
-            |> Seq.map(fun(move) -> Record(move, applyMove move seed.P))
+            |> Seq.map(fun(f) -> Record(f.M, f.P))
             |> Seq.sortBy (fun record -> record.Ms.Length) 
             |> Seq.toArray
 
