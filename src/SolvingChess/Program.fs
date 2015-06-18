@@ -8,17 +8,18 @@ open MateFinder
 let startpos = { 
     EmptyBoard with 
                 WhiteKing = G1;
-                WhiteQueens = C2;
-                WhitePawns = B3 ||| F2 ||| G3 ||| H2;
-                WhiteBishops = B2 ||| G2;
-                WhiteRooks = C1 ||| D1;
+                WhiteQueens = H5;
+                WhitePawns = A2 ||| B2 ||| C2 ||| G2 ||| H2;
+                WhiteBishops = C4 ||| E3;
+                WhiteKnights = D2 ||| D4;
+                WhiteRooks = A1 ||| F4;
                 
-                BlackKing = F7;
-                BlackQueens = D8
-                BlackPawns = B7 ||| D5 ||| G7 ||| H6;
-                BlackBishops = E7 ||| C8;
-                BlackKnights = D7;
-                BlackRooks = A8 ||| E8;
+                BlackKing = G7;
+                BlackQueens = D8;
+                BlackPawns = A7 ||| B7 ||| E5 ||| G6 ||| H7;
+                BlackBishops = F8 ||| C8;
+                BlackKnights = B8 ||| F6;
+                BlackRooks = A8 ||| H8;
 
                 SideToMove = White
 }
@@ -40,5 +41,5 @@ let main argv =
     | Some(line) -> printmoves line
     | None -> printfn "There is no answer"
 
-    //printfn "number of calls: %d" numberOfCalls
+    printfn "number of calls: %d" numberOfCalls
     0

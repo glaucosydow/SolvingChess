@@ -12,6 +12,7 @@ type Record(m,p) =
     member x.M = m
     member x.P = p
     member x.Ms = ms
+    
     member x.hasResponses = x.Ms.Length > 0
     member x.check = chk
     member x.withNoKingMoves = not (Array.exists (fun move -> move.Piece = King) x.Ms )
@@ -24,14 +25,14 @@ open BitOperations
 
 let mutable numberOfCalls = 0
 
-let rec private internalFindMate position depth maxdepth = 
+let rec private internalFindMate (seed: Record) depth maxdepth = 
     numberOfCalls <- if depth = 0 then 0 else numberOfCalls + 1
        
     if depth < maxdepth then
 
         let continuations = 
-            moves position
-            |> Seq.map(fun(move) -> Record(move, applyMove move position))
+            seed.Ms
+            |> Seq.map(fun(move) -> Record(move, applyMove move seed.P))
             |> Seq.sortBy (fun record -> record.Ms.Length) 
             |> Seq.toArray
 
@@ -42,7 +43,7 @@ let rec private internalFindMate position depth maxdepth =
 
         match mate with
         | Some(record) ->  
-            match position.SideToMove with
+            match seed.P.SideToMove with
             | Black -> None
             | White ->
                  //printfn "%s%s" (String.replicate (depth + 1) " ") (record.ToString())
@@ -52,7 +53,7 @@ let rec private internalFindMate position depth maxdepth =
                 continuations 
                 |> Array.skipWhile (fun alternative -> not alternative.hasResponses)
 
-            match position.SideToMove with
+            match seed.P.SideToMove with
             | Black ->
                 let rec explore (enumerator:IEnumerator<Record[] option>): Record[] option =
                     if enumerator.MoveNext() 
@@ -84,7 +85,7 @@ let rec private internalFindMate position depth maxdepth =
                     alternatives
                     |> Seq.map (fun alternative -> 
                                     //printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())
-                                    let line = internalFindMate alternative.P (depth + 1) maxdepth
+                                    let line = internalFindMate alternative (depth + 1) maxdepth
                                     match line with 
                                     | Some(x) -> Some(Array.append [| alternative |] x)
                                     | None -> None
@@ -98,7 +99,7 @@ let rec private internalFindMate position depth maxdepth =
                     then
                         let move = enumerator.Current
                         //printfn "%s%s" (String.replicate (depth + 1) " ") (move.ToString())
-                        let line1 = internalFindMate enumerator.Current.P (depth + 1) maxdepth
+                        let line1 = internalFindMate enumerator.Current (depth + 1) maxdepth
                         let line2 = explore enumerator (if line1 = None then maxdepth else depth + line1.Value.Length)
                         match line1, line2 with 
                         | Some(x), None -> Some(Array.append [| move |] x)
@@ -128,7 +129,7 @@ let rec private internalFindMate position depth maxdepth =
                     else
                         pre
 
-                let blackKingArea = kingArea position.BlackKing
+                let blackKingArea = kingArea seed.P.BlackKing
 
                 let kaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) = a.M.To )
                 let nkaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) <> a.M.To )
@@ -147,7 +148,7 @@ let rec private internalFindMate position depth maxdepth =
         None
             
 let rec findMate position depth maxdepth = 
-    match internalFindMate position depth maxdepth with
+    match internalFindMate (Record (NullMove, position)) depth maxdepth with
     | None -> None
     | Some(line) -> Some (line |> Array.map(fun record -> record.M) )
     

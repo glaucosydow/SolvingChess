@@ -55,6 +55,8 @@ let p origin destiny  =
     let promotion = if ((isSet destiny (rank 0)) || (isSet destiny (rank 7))) then Queen else Undefined 
     {Piece=Pawn; From=origin; To=destiny; Promotion=promotion}
 
+let NullMove = {Piece=Undefined; From=A1; To=A1; Promotion=Undefined}
+
 
 let applyMove move position =
     let inline a move bitboard =
