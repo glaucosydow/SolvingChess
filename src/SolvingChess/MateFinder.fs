@@ -55,43 +55,32 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
 
             match seed.P.SideToMove with
             | Black ->
-                let rec explore (enumerator:IEnumerator<Record[] option>): Record[] option =
-                    if enumerator.MoveNext() 
-                    then
-                        let c1 = enumerator.Current
-                        if c1 = None 
-                        then None
-                        else
-                            let c2 = explore enumerator
-                            match c1, c2 with
-                            | None, _ -> None
-                            | _, None -> None
-                            | Some(a), Some(b) -> 
-                                Some(
-                                    if a.Length > b.Length 
-                                    then a
-                                    elif a.Length = b.Length then 
-                                        (
-                                            if ((Array.last a).P.score) > ((Array.last b).P.score) 
-                                            then b 
-                                            else a
-                                        )
-                                    else b
-                                )
+                let rec explore accum index (alternatives: Record[]) =
+                    if (index = alternatives.Length) then accum
                     else
-                        Some(Array.empty<Record>)
-                   
-                let future = 
-                    alternatives
-                    |> Seq.map (fun alternative -> 
-                                    //printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())
-                                    let line = internalFindMate alternative (depth + 1) maxdepth
-                                    match line with 
+                        let alternative = alternatives.[index]
+                        let line = internalFindMate alternative (depth + 1) maxdepth
+                        let local = match line with 
                                     | Some(x) -> Some(Array.append [| alternative |] x)
                                     | None -> None
-                                  )
+                    
+                        if local=None then
+                            None
+                        elif index = 0 then 
+                            explore local (index + 1) alternatives
+                        else
+                            let a = accum.Value;
+                            let b = local.Value;
+                            let newaccum = 
+                                                Some(
+                                                    if   a.Length > b.Length then a
+                                                    elif a.Length < b.Length then b
+                                                    else if ((Array.last a).P.score) > ((Array.last b).P.score) then b else a
+                                                )
+                                           
+                            explore newaccum (index + 1) alternatives
 
-                explore (future.GetEnumerator())
+                explore None 0 alternatives
 
             | White -> 
                 let rec explore (enumerator:IEnumerator<Record>) (maxdepth) : Record[] option =
