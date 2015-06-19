@@ -119,12 +119,21 @@ let whiteKnightsMoves (position : Position) =
     |> Seq.map (fun(knight) -> enumerateMoves Knight knight ((knightsAttacks knight) &&& ~~~(position.WhitePieces)))
     |> Seq.concat
 
+let private rank1 = rank 1
 let whitePawnMoves (position : Position) =
     enumerateSquares position.WhitePawns
     |> Seq.map(fun(pawn) -> 
         let captures = (pawn.chessShift 1 -1 ||| pawn.chessShift 1 1) &&& position.BlackPieces
-        let advance = (pawn.chessShift 1 0) &&& ~~~position.AllPieces
-        enumerateMoves Pawn pawn (captures ||| advance)
+        
+        let advance1 = 
+            (pawn.chessShift 1 0) &&& ~~~position.AllPieces 
+
+        let advance2 = 
+            match advance1 with 
+            | 0UL -> 0UL
+            | _   -> (if (isSet pawn rank1) then pawn.chessShift 2 0 else 0UL) &&& ~~~position.AllPieces 
+            
+        enumerateMoves Pawn pawn (captures ||| advance1 ||| advance2)
        )
     |> Seq.concat
 
@@ -163,12 +172,21 @@ let blackKnightsMoves (position : Position) =
     |> Seq.map (fun(knight) -> enumerateMoves Knight knight ((knightsAttacks knight) &&& ~~~(position.BlackPieces)))
     |> Seq.concat
 
+let rank6 = rank 6
 let blackPawnMoves (position : Position) =
     enumerateSquares position.BlackPawns 
     |> Seq.map(fun(pawn) -> 
         let captures = (pawn.chessShift -1 -1 ||| pawn.chessShift -1 1) &&& position.WhitePieces
-        let advance = (pawn.chessShift -1 0) &&& ~~~position.AllPieces
-        enumerateMoves Pawn pawn (captures ||| advance)
+        
+        let advance1 = (pawn.chessShift -1 0) &&& ~~~position.AllPieces
+
+        let advance2 = 
+            match advance1 with 
+            | 0UL -> 0UL
+            | _   -> (if (isSet pawn rank6) then pawn.chessShift -2 0 else 0UL) &&& ~~~position.AllPieces 
+
+
+        enumerateMoves Pawn pawn (captures ||| advance1 ||| advance2)
        )
     |> Seq.concat
 

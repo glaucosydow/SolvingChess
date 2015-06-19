@@ -23,6 +23,18 @@ let ``Detects white pawns captures``() =
     let position = { EmptyBoard with WhitePawns= (sq 'b' 2); BlackPawns = (sq 'b' 3)  ||| (sq 'c' 3)}
     let move = moves position |> Seq.head
     Assert.AreEqual({Piece=Pawn; From=(sq 'b' 2);To=(sq 'c' 3); Promotion=Undefined}, move)
+
+[<Test>]
+let ``Detects white pawns first move``() = 
+    let position = {EmptyBoard with WhitePawns= A2}
+    let moves = moves position |> Seq.toArray
+    Assert.AreEqual([| p A2 A3; p A2 A4 |], moves)
+
+[<Test>]
+let ``Detects black pawns first move``() = 
+    let position = {EmptyBoard with BlackPawns= E7; SideToMove=Black}
+    let moves = moves position |> Seq.toArray
+    Assert.AreEqual([| p E7 E5; p E7 E6 |], moves)
     
 [<Test>]
 let ``Detects black pawns advances``() =

@@ -7,6 +7,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SolvingChess", "src\Solving
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SolvingChess.Tests", "test\SolvingChess.Tests\SolvingChess.Tests.fsproj", "{4E32946A-D105-4AD9-AE65-66DDA5152D2F}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SolvingChess.Puzzles", "test\SolvingChess.Puzzles\SolvingChess.Puzzles.fsproj", "{33A78D75-57F6-482C-94BD-A45A11AB3724}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{4E32946A-D105-4AD9-AE65-66DDA5152D2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4E32946A-D105-4AD9-AE65-66DDA5152D2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4E32946A-D105-4AD9-AE65-66DDA5152D2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33A78D75-57F6-482C-94BD-A45A11AB3724}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33A78D75-57F6-482C-94BD-A45A11AB3724}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33A78D75-57F6-482C-94BD-A45A11AB3724}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33A78D75-57F6-482C-94BD-A45A11AB3724}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

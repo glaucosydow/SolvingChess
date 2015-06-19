@@ -5,14 +5,13 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>4e32946a-d105-4ad9-ae65-66dda5152d2f</ProjectGuid>
+    <ProjectGuid>33a78d75-57f6-482c-94bd-a45a11ab3724</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>SolvingChess.Tests</RootNamespace>
-    <AssemblyName>SolvingChess.Tests</AssemblyName>
+    <RootNamespace>SolvingChess.Puzzles</RootNamespace>
+    <AssemblyName>SolvingChess.Puzzles</AssemblyName>
     <TargetFrameworkVersion>v4.5.1</TargetFrameworkVersion>
     <TargetFSharpCoreVersion>4.4.0.0</TargetFSharpCoreVersion>
-    <Name>SolvingChess.Tests</Name>
-    <NuGetPackageImportStamp>e2a90257</NuGetPackageImportStamp>
+    <Name>SolvingChess.Puzzles</Name>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -23,7 +22,7 @@
     <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Debug\SolvingChess.Tests.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\SolvingChess.Puzzles.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -32,7 +31,7 @@
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <WarningLevel>3</WarningLevel>
-    <DocumentationFile>bin\Release\SolvingChess.Tests.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\SolvingChess.Puzzles.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <MinimumVisualStudioVersion Condition="'$(MinimumVisualStudioVersion)' == ''">11</MinimumVisualStudioVersion>
@@ -52,15 +51,9 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="TestsOfBoardUnits.fs" />
-    <Compile Include="TestsOfBitOperations.fs" />
-    <Compile Include="TestsOfChessShifter.fs" />
-    <Compile Include="TestsOfAttacks.fs" />
-    <Compile Include="TestsOfCheck.fs" />
-    <Compile Include="TestsOfMoveGen.fs" />
-    <Compile Include="TestsOfMoveApply.fs" />
     <Content Include="packages.config" />
-    <Compile Include="TestsOfPosition.fs" />
+    <Content Include="app.config" />
+    <Compile Include="Puzzles.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
@@ -73,12 +66,12 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
     <ProjectReference Include="..\..\src\SolvingChess\SolvingChess.fsproj">
       <Name>SolvingChess</Name>
       <Project>{9a4118e8-93c9-423c-94bf-6186bf1934c7}</Project>
       <Private>True</Private>
     </ProjectReference>
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
