@@ -98,11 +98,11 @@ let rec private enumerateMoves piece from destinations =
 let whiteKingMoves position =
     enumerateMoves King position.WhiteKing ((kingAttacks position.WhiteKing) &&& ~~~(blackAttacks position false) &&& ~~~(position.WhitePieces))
 
-let whiteQueenMoves position =
+let whiteQueenMoves (position: Position) =
+    let allpieces = position.BlackPieces ||| position.WhitePieces 
     enumerateSquares position.WhiteQueens
-    |> Seq.map (fun(queen) -> enumerateMoves Queen queen ((queensAttacks queen position.WhitePieces position.BlackPieces)  &&& ~~~(position.WhitePieces)))
+    |> Seq.map (fun(queen) -> enumerateMoves Queen queen ((queenAttacks queen allpieces)  &&& ~~~(position.WhitePieces)))
     |> Seq.concat
-
 
 let whiteRookMoves (position: Position) =
     let allpieces = position.BlackPieces ||| position.WhitePieces 
@@ -153,11 +153,11 @@ let whiteMoves position : seq<Move> = seq {
 let blackKingMoves position inCheck=
     enumerateMoves King position.BlackKing ((kingAttacks position.BlackKing) &&& ~~~(whiteAttacks position inCheck) &&& ~~~(position.BlackPieces))
 
-let blackQueenMoves position =
+let blackQueenMoves (position: Position) =
+    let allpieces = position.BlackPieces ||| position.WhitePieces 
     enumerateSquares position.BlackQueens
-    |> Seq.map (fun(queen) -> enumerateMoves Queen queen ((queensAttacks queen position.BlackPieces position.WhitePieces)  &&& ~~~(position.BlackPieces)))
+    |> Seq.map (fun(queen) -> enumerateMoves Queen queen ((queenAttacks queen allpieces)  &&& ~~~(position.BlackPieces)))
     |> Seq.concat
-
 
 let blackRookMoves (position: Position) =
     let allpieces = position.BlackPieces ||| position.WhitePieces     

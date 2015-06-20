@@ -67,9 +67,11 @@ let bishopsAttacks bishopsPositions friends enemies =
     |> Seq.map(fun(sq) -> bishopAttacks sq allpieces)
     |> Seq.fold (fun acc elem -> acc ||| elem) 0UL
 
+let queenAttacks sq allpieces = 
+    (bishopAttacks sq allpieces) ||| (rookAttacks sq allpieces)
+
 let queensAttacks queensPositions friends enemies = 
     (rooksAttacks queensPositions friends enemies) ||| (bishopsAttacks queensPositions friends enemies)
-
 
 let whiteAttacks (position:Position) ignoresBlackKing =
     let enemies = if not ignoresBlackKing 
