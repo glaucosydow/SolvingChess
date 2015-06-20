@@ -15,16 +15,19 @@ let private Index64 = [|
 let lsb value = 
     Index64.[int (((value &&& (~~~value + 1UL)) * 571347909858961602UL) >>> 58)]
 
-let rec msb (value: uint64) =
+let rec msbtail accum (value: uint64) =
     match value with
-    | v when v > 4294967295UL -> 32 + (msb (value >>> 32))
-    | v when v > 65535UL -> 16 + (msb (value >>> 16))
-    | v when v > 255UL -> 8  + (msb (value >>> 8))
-    | v when v > 15UL -> 4  + (msb (value >>> 4))
-    | v when v > 3UL -> 2  + (msb (value >>> 2))
-    | v when v > 1UL -> 1
-    | _ -> 0
+    | v when v > 4294967295UL -> (msbtail (accum + 32) (value >>> 32))
+    | v when v > 65535UL ->      (msbtail (accum + 16) (value >>> 16))
+    | v when v > 255UL ->        (msbtail (accum +  8) (value >>> 8))
+    | v when v > 15UL ->         (msbtail (accum +  4) (value >>> 4))
+    | v when v > 3UL ->          (msbtail (accum +  2) (value >>> 2))
+    | v when v > 1UL ->          accum + 1
+    | _ ->                       accum 
     
+
+let rec msb (value: uint64) =
+    msbtail 0 value
 
 let private h01 = 72340172838076673UL   // 0x0101010101010101;
 let private m1  = 6148914691236517205UL // 0x5555555555555555;

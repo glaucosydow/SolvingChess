@@ -29,20 +29,24 @@ let kingArea (kingPosition: Bitboard) =
     karea.[lsb kingPosition]
 
 let whitePawnsAttacks (whitePawnsPositions : Bitboard) =
-    let cs = whitePawnsPositions.chessShift
-    (cs 1 -1 ||| cs 1 1) 
+    (chessShift  1 -1 whitePawnsPositions) ||| (chessShift 1 1 whitePawnsPositions)
 
 let blackPawnsAttacks (blackPawnsPositions : Bitboard) =
-    let cs = blackPawnsPositions.chessShift
-    cs -1 -1 ||| cs -1 1
+    (chessShift -1 -1 blackPawnsPositions) ||| (chessShift -1 1 blackPawnsPositions)
+
 
 let inline knightAttacks sq = 
     knightAttacksPC.[lsb sq]
 
 let knightsAttacks (knightsPositions : Bitboard) =
-    let cs = knightsPositions.chessShift
-    cs 1 2 ||| cs  1 -2 ||| cs  2 1 ||| cs  2 -1 ||| cs -1 2 |||
-               cs -1 -2 ||| cs -2 1 ||| cs -2 -1
+    chessShift  1  2 knightsPositions |||
+    chessShift  1 -2 knightsPositions |||
+    chessShift  2  1 knightsPositions |||
+    chessShift  2 -1 knightsPositions |||
+    chessShift -1  2 knightsPositions |||
+    chessShift -1 -2 knightsPositions |||
+    chessShift -2  1 knightsPositions |||
+    chessShift -2 -1 knightsPositions
 
 let inline rookAttacks sq allpieces = 
     let a = except sq (rankOfSquare sq ||| fileOfSquare sq)
