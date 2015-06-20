@@ -142,22 +142,34 @@ let rec private upside r =
     | ri -> (rank r) ||| (upside (r + 1))
 
 
-let rayToNEFromSquare sq =
-    except sq ((diagonalNEOfSquare sq) &&& (upside (rankIndexOfSquare sq)))
-
-let rayToNWFromSquare sq =
-    except sq ((diagonalNWOfSquare sq) &&& (upside (rankIndexOfSquare sq)))
-
 let rec private downside r =
     match r with 
     | ri when ri < 0 -> 0UL
     | ri -> (rank r) ||| (downside (r - 1))
 
-let rayToSWFromSquare sq =
-    except sq ((diagonalNEOfSquare sq) &&& (downside (rankIndexOfSquare sq)))
+let rayToNEFromSquarePC = Array.zeroCreate<Bitboard> 64
+let rayToNWFromSquarePC = Array.zeroCreate<Bitboard> 64
+let rayToSWFromSquarePC = Array.zeroCreate<Bitboard> 64
+let rayToSEFromSquarePC = Array.zeroCreate<Bitboard> 64
 
-let rayToSEFromSquare sq =
-    except sq ((diagonalNWOfSquare sq) &&& (downside (rankIndexOfSquare sq)))
+for index = 0 to 63 do
+    let sq = sqFromIndex index
+    rayToNEFromSquarePC.[index] <- except sq ((diagonalNEOfSquare sq) &&& (upside (rankIndexOfSquare sq)))
+    rayToNWFromSquarePC.[index] <- except sq ((diagonalNWOfSquare sq) &&& (upside (rankIndexOfSquare sq)))
+    rayToSWFromSquarePC.[index] <- except sq ((diagonalNEOfSquare sq) &&& (downside (rankIndexOfSquare sq)))
+    rayToSEFromSquarePC.[index] <- except sq ((diagonalNWOfSquare sq) &&& (downside (rankIndexOfSquare sq)))
+
+let inline rayToNEFromSquare sq =
+    rayToNEFromSquarePC.[lsb sq]
+
+let inline rayToNWFromSquare sq =
+    rayToNWFromSquarePC.[lsb sq]
+
+let inline rayToSWFromSquare sq =
+    rayToSWFromSquarePC.[lsb sq]
+
+let inline rayToSEFromSquare sq =
+    rayToSEFromSquarePC.[lsb sq]
     
 let inline sqToString sq =
     sprintf "%c%d" [| 'a'; 'b'; 'c'; 'd'; 'e'; 'f'; 'g'; 'h'|].[fileIndexOfSquare sq] ( (rankIndexOfSquare sq) + 1)

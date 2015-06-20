@@ -19,7 +19,7 @@ for i = 0 to 63 do
     let a = cs  -1 0 (ka.[i]) ||| cs  1 0 (ka.[i])
     karea.[i] <- cs  0 -1 a ||| cs 0 1 a
     
-    wpa.[i] <- (cs 1 -1 s ||| cs 1 1 s) 
+    wpa.[i] <- (cs  1 -1 s ||| cs 1 1 s) 
 
 
 let kingAttacks (kingPosition : Bitboard) = 
