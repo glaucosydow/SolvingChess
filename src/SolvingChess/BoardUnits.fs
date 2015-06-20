@@ -159,8 +159,6 @@ let rayToSWFromSquare sq =
 let rayToSEFromSquare sq =
     except sq ((diagonalNWOfSquare sq) &&& (downside (rankIndexOfSquare sq)))
     
-
-
 let inline sqToString sq =
     sprintf "%c%d" [| 'a'; 'b'; 'c'; 'd'; 'e'; 'f'; 'g'; 'h'|].[fileIndexOfSquare sq] ( (rankIndexOfSquare sq) + 1)
 

@@ -220,8 +220,6 @@ let ``puzzle 09``() =
     printfn "%d" numberOfCalls
     Assert.True(mateline <> None)
 
-
-
     let expected = [| B D4 E5; p D6 E5; Q G5 F6; K H8 G8; R H1 G1; K G8 F8; Q F6 D6; R E8 E7; Q D6 H6; K F8 E8; R G1 G8; K E8 D7; Q H6 C6 |]
     let current = mateline.Value
 

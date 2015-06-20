@@ -5,15 +5,28 @@ open Position
 open BoardShifter
 open BitOperations
 
+let private ka =    Array.zeroCreate<Bitboard> 64
+let private karea = Array.zeroCreate<Bitboard> 64
+let private wpa =   Array.zeroCreate<Bitboard> 64
+
+for i = 0 to 63 do
+    let s = sqFromIndex i
+    let cs = chessShift
+
+    ka.[i] <- cs -1 -1 s ||| cs -1  0 s ||| cs -1 1 s ||| cs  0 -1 s ||| cs  0 1 s |||
+                 cs  1 -1 s||| cs  1 0 s ||| cs  1 1 s 
+
+    let a = cs  -1 0 (ka.[i]) ||| cs  1 0 (ka.[i])
+    karea.[i] <- cs  0 -1 a ||| cs 0 1 a
+    
+    wpa.[i] <- (cs 1 -1 s ||| cs 1 1 s) 
+
+
 let kingAttacks (kingPosition : Bitboard) = 
-    let cs = kingPosition.chessShift
-    cs -1 -1 ||| cs -1  0 ||| cs -1 1 ||| cs  0 -1 ||| cs  0 1 |||
-                 cs  1 -1 ||| cs  1 0 ||| cs  1 1 
+    ka.[lsb kingPosition]
 
 let kingArea (kingPosition: Bitboard) =
-    let ka = kingAttacks kingPosition
-    let a = ka.chessShift -1 0 ||| ka.chessShift 1 0
-    a.chessShift 0 -1 ||| a.chessShift 0 1
+    karea.[lsb kingPosition]
 
 let whitePawnsAttacks (whitePawnsPositions : Bitboard) =
     let cs = whitePawnsPositions.chessShift
