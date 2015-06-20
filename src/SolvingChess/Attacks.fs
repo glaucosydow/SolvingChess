@@ -41,13 +41,12 @@ let knightsAttacks (knightsPositions : Bitboard) =
     cs 1 2 ||| cs  1 -2 ||| cs  2 1 ||| cs  2 -1 ||| cs -1 2 |||
                cs -1 -2 ||| cs -2 1 ||| cs -2 -1
 
-let rookAttacks sq allpieces = 
-    rankOfSquare sq ||| fileOfSquare sq 
-                    |> except sq
-                    |> except (rayToNFromSquare (((rayToNFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
-                    |> except (rayToEFromSquare (((rayToEFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
-                    |> except (rayToSFromSquare (((rayToSFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
-                    |> except (rayToWFromSquare (((rayToWFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
+let inline rookAttacks sq allpieces = 
+    let a = except sq (rankOfSquare sq ||| fileOfSquare sq)
+    let b = except (rayToNFromSquare (((rayToNFromSquare sq) &&& allpieces).lsb() |> sqFromIndex)) a
+    let c = except (rayToEFromSquare (((rayToEFromSquare sq) &&& allpieces).lsb() |> sqFromIndex)) b
+    let d = except (rayToSFromSquare (((rayToSFromSquare sq) &&& allpieces).msb() |> sqFromIndex)) c
+    except (rayToWFromSquare (((rayToWFromSquare sq) &&& allpieces).msb() |> sqFromIndex)) d
 
 let rooksAttacks rooksPositions friends enemies =
     let allpieces = friends ||| enemies
@@ -55,17 +54,17 @@ let rooksAttacks rooksPositions friends enemies =
     |> Seq.map(fun(sq) -> rookAttacks sq allpieces)
     |> Seq.fold (fun acc elem -> acc ||| elem) 0UL
 
+let bishopAttacks sq allpieces =
+    let a = except sq (diagonalNWOfSquare sq ||| diagonalNEOfSquare sq)
+    let b = except (rayToNEFromSquare (((rayToNEFromSquare sq) &&& allpieces).lsb() |> sqFromIndex)) a
+    let c = except (rayToNWFromSquare (((rayToNWFromSquare sq) &&& allpieces).lsb() |> sqFromIndex)) b
+    let d = except (rayToSEFromSquare (((rayToSEFromSquare sq) &&& allpieces).msb() |> sqFromIndex)) c
+    except (rayToSWFromSquare (((rayToSWFromSquare sq) &&& allpieces).msb() |> sqFromIndex)) d
+
 let bishopsAttacks bishopsPositions friends enemies =
     let allpieces = friends ||| enemies
     enumerateSquares bishopsPositions
-    |> Seq.map(fun(sq) -> 
-                    diagonalNWOfSquare sq ||| diagonalNEOfSquare sq 
-                    |> except sq
-                    |> except (rayToNEFromSquare (((rayToNEFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
-                    |> except (rayToNWFromSquare (((rayToNWFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
-                    |> except (rayToSEFromSquare (((rayToSEFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
-                    |> except (rayToSWFromSquare (((rayToSWFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
-              )
+    |> Seq.map(fun(sq) -> bishopAttacks sq allpieces)
     |> Seq.fold (fun acc elem -> acc ||| elem) 0UL
 
 let queensAttacks queensPositions friends enemies = 
