@@ -118,7 +118,7 @@ let whiteBishopMoves (position: Position) =
 
 let whiteKnightsMoves (position : Position) =
     enumerateSquares position.WhiteKnights
-    |> Seq.map (fun(knight) -> enumerateMoves Knight knight ((knightsAttacks knight) &&& ~~~(position.WhitePieces)))
+    |> Seq.map (fun(knight) -> enumerateMoves Knight knight ((knightAttacks knight) &&& ~~~(position.WhitePieces)))
     |> Seq.concat
 
 let private rank1 = rank 1
@@ -173,7 +173,7 @@ let blackBishopMoves (position: Position) =
 
 let blackKnightsMoves (position : Position) =
     enumerateSquares position.BlackKnights
-    |> Seq.map (fun(knight) -> enumerateMoves Knight knight ((knightsAttacks knight) &&& ~~~(position.BlackPieces)))
+    |> Seq.map (fun(knight) -> enumerateMoves Knight knight ((knightAttacks knight) &&& ~~~(position.BlackPieces)))
     |> Seq.concat
 
 let rank6 = rank 6

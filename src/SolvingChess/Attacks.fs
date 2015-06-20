@@ -7,7 +7,7 @@ open BitOperations
 
 let private ka =    Array.zeroCreate<Bitboard> 64
 let private karea = Array.zeroCreate<Bitboard> 64
-let private wpa =   Array.zeroCreate<Bitboard> 64
+let knightAttacksPC =   Array.zeroCreate<Bitboard> 64
 
 for i = 0 to 63 do
     let s = sqFromIndex i
@@ -15,11 +15,11 @@ for i = 0 to 63 do
 
     ka.[i] <- cs -1 -1 s ||| cs -1  0 s ||| cs -1 1 s ||| cs  0 -1 s ||| cs  0 1 s |||
                  cs  1 -1 s||| cs  1 0 s ||| cs  1 1 s 
-
     let a = cs  -1 0 (ka.[i]) ||| cs  1 0 (ka.[i])
     karea.[i] <- cs  0 -1 a ||| cs 0 1 a
-    
-    wpa.[i] <- (cs  1 -1 s ||| cs 1 1 s) 
+
+    knightAttacksPC.[i] <- cs 1 2 s ||| cs  1 -2 s ||| cs  2 1 s||| cs  2 -1 s||| cs -1 2 s |||
+               cs -1 -2 s ||| cs -2 1 s ||| cs -2 -1 s
 
 
 let kingAttacks (kingPosition : Bitboard) = 
@@ -35,6 +35,9 @@ let whitePawnsAttacks (whitePawnsPositions : Bitboard) =
 let blackPawnsAttacks (blackPawnsPositions : Bitboard) =
     let cs = blackPawnsPositions.chessShift
     cs -1 -1 ||| cs -1 1
+
+let inline knightAttacks sq = 
+    knightAttacksPC.[lsb sq]
 
 let knightsAttacks (knightsPositions : Bitboard) =
     let cs = knightsPositions.chessShift
