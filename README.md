@@ -10,8 +10,8 @@ Current version is good enough to solve these puzzles:
 ````fsharp
 [<Test>]
 let ``puzzle 01``() =
-    let startpos = { 
-        EmptyBoard with 
+    let startpos = {
+        EmptyBoard with
                     WhiteKing = F7;
                     WhitePawns = F5 ||| G6;
                     WhiteKnights = G4;
@@ -34,14 +34,14 @@ let ``puzzle 01``() =
 ````fsharp
 [<Test>]
 let ``puzzle 02``() =
-    let startpos = { 
-        EmptyBoard with 
+    let startpos = {
+        EmptyBoard with
                     WhiteKing = H1;
                     WhitePawns = A2 ||| C3 ||| D4 ||| F4 ||| H2;
                     WhiteQueens = G5;
                     WhiteBishops = G6;
                     WhiteRooks = H5;
-                
+
                     BlackKing = G7;
                     BlackPawns = A7 ||| B6 ||| C7 ||| D5;
                     BlackKnights = G4 ||| H6;
@@ -64,15 +64,15 @@ let ``puzzle 02``() =
 ````fsharp
 [<Test>]
 let ``puzzle 03``() =
-    let startpos = { 
-        EmptyBoard with 
+    let startpos = {
+        EmptyBoard with
                     WhiteKing = G1;
                     WhitePawns = A3 ||| B4 ||| C3 ||| D4 ||| E4 ||| F5 ||| G2 ||| H3;
                     WhiteQueens = F2;
                     WhiteBishops = E3 ||| H5;
                     WhiteRooks = D1 |||D3;
                     WhiteKnights = G3 ||| G4;
-                
+
                     BlackKing = H7;
                     BlackPawns = A4 ||| B5 ||| C7 ||| D6 ||| E5 ||| F6 ||| G5 ||| H6;
                     BlackQueens = F8;
@@ -95,15 +95,15 @@ let ``puzzle 03``() =
 
 ````fsharp
 [<Test>]
-let ``puzzle 04``() = 
-    let startpos = { 
-        EmptyBoard with 
+let ``puzzle 04``() =
+    let startpos = {
+        EmptyBoard with
                     WhiteKing = G1;
                     WhitePawns = A2 ||| C2 ||| E3 ||| F2 ||| G2 ||| H2;
                     WhiteBishops = A3;
                     WhiteRooks = B1 |||D1;
                     WhiteKnights = G7;
-                
+
                     BlackKing = F7;
                     BlackPawns = A6 ||| B7 ||| E5 ||| F6 ||| G6 ||| H7;
                     BlackBishops = C3 ||| C8;
@@ -128,14 +128,14 @@ let ``puzzle 04``() =
 ````fsharp
 [<Test>]
 let ``puzzle 05``() =
-    let startpos = { 
-     EmptyBoard with 
+    let startpos = {
+     EmptyBoard with
                 WhiteKing = E1;
                 WhiteQueens = C6;
                 WhitePawns = F6;
                 WhiteBishops = E4;
                 WhiteKnights = D5;
-                
+
                 BlackKing = B8;
                 BlackPawns = A7 ||| C7 ||| F7;
                 BlackBishops = D3;
@@ -158,14 +158,14 @@ let ``puzzle 05``() =
 ````fsharp
 [<Test>]
 let ``puzzle 06``() =
-    let startpos = { 
-        EmptyBoard with 
+    let startpos = {
+        EmptyBoard with
                     WhiteKing = G1;
                     WhiteQueens = C2;
                     WhitePawns = B3 ||| F2 ||| G3 ||| H2;
                     WhiteBishops = B2 ||| G2;
                     WhiteRooks = C1 ||| D1;
-                
+
                     BlackKing = F7;
                     BlackQueens = D8
                     BlackPawns = B7 ||| D5 ||| G7 ||| H6;
@@ -190,15 +190,15 @@ let ``puzzle 06``() =
 ````fsharp
 [<Test>]
 let ``puzzle 07``() =
-    let startpos = { 
-        EmptyBoard with 
+    let startpos = {
+        EmptyBoard with
                     WhiteKing = G1;
                     WhiteQueens = H5;
                     WhitePawns = A2 ||| B2 ||| C2 ||| G2 ||| H2;
                     WhiteBishops = C4 ||| E3;
                     WhiteKnights = D2 ||| D4;
                     WhiteRooks = A1 ||| F4;
-                
+
                     BlackKing = G7;
                     BlackQueens = D8
                     BlackPawns = A7 ||| B7 ||| E4 ||| G6 ||| H7;
@@ -214,6 +214,36 @@ let ``puzzle 07``() =
     Assert.True(mateline <> None)
 
     let expected = [| Q H5 H6; K G7 H6; R F4 H4; K H6 G7; B E3 H6 |]
+    let current = mateline.Value
+
+    Assert.AreEqual(expected, current)
+````
+
+![puzzle #09](/assets/09.jpg)
+````fsharp
+[<Test>]
+let ``puzzle 09``() =
+    let startpos = {
+        EmptyBoard with
+            WhiteKing = A2
+            WhiteQueens = G5
+            WhiteBishops = D4
+            WhiteKnights = D1
+            WhiteRooks = H1
+            WhitePawns = A3 ||| D5 ||| H2
+
+            BlackKing = H8
+            BlackQueens = A5
+            BlackBishops = A6 ||| E5
+            BlackRooks = E8
+            BlackPawns = B4 ||| D6 ||| F7 ||| H7
+    }
+
+    let mateline = (findMate startpos 0 15)
+    printfn "%d" numberOfCalls
+    Assert.True(mateline <> None)
+
+    let expected = [| B D4 E5; p D6 E5; Q G5 F6; K H8 G8; R H1 G1; K G8 F8; Q F6 D6; R E8 E7; Q D6 H6; K F8 E8; R G1 G8; K E8 D7; Q H6 C6 |]
     let current = mateline.Value
 
     Assert.AreEqual(expected, current)
