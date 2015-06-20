@@ -218,8 +218,6 @@ let futures position =
                         | White -> whiteMoves position
                         | Black -> blackMoves position
     
-    
-    
     alternatives 
     |> Seq.map(fun m -> {M=m; P=applyMove m position})
     |> Seq.where(fun f -> not (isKingUnderAttack position.SideToMove f.P))

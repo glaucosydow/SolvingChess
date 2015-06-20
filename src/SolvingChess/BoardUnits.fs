@@ -116,26 +116,6 @@ let inline diagonalNWOfSquare sq =
     | i when i <= 7 -> reference.chessShift (i-7)  0
     | i  -> reference.chessShift 0 (i-7)
 
-let inline rayToNFromSquare sq =
-    let f = fileOfSquare sq
-    let ri = rankIndexOfSquare sq
-    chessShift ri 0 f |> except sq
-
-let inline rayToSFromSquare sq =
-    let f = fileOfSquare sq
-    let ri = rankIndexOfSquare sq
-    chessShift (ri - 7) 0 f |> except sq
-
-let inline rayToEFromSquare sq =
-    let r = rankOfSquare sq
-    let fi = fileIndexOfSquare sq
-    chessShift 0 (fi) r |> except sq
-
-let inline rayToWFromSquare sq =
-    let r = rankOfSquare sq
-    let fi = fileIndexOfSquare sq
-    chessShift 0 (fi - 7) r |> except sq
-
 let rec private upside r =
     match r with 
     | ri when ri > 7 -> 0UL
@@ -147,10 +127,15 @@ let rec private downside r =
     | ri when ri < 0 -> 0UL
     | ri -> (rank r) ||| (downside (r - 1))
 
+
 let rayToNEFromSquarePC = Array.zeroCreate<Bitboard> 64
 let rayToNWFromSquarePC = Array.zeroCreate<Bitboard> 64
 let rayToSWFromSquarePC = Array.zeroCreate<Bitboard> 64
 let rayToSEFromSquarePC = Array.zeroCreate<Bitboard> 64
+let rayToNFromSquarePC  = Array.zeroCreate<Bitboard> 64
+let rayToSFromSquarePC  = Array.zeroCreate<Bitboard> 64
+let rayToEFromSquarePC  = Array.zeroCreate<Bitboard> 64
+let rayToWFromSquarePC  = Array.zeroCreate<Bitboard> 64
 
 for index = 0 to 63 do
     let sq = sqFromIndex index
@@ -158,6 +143,28 @@ for index = 0 to 63 do
     rayToNWFromSquarePC.[index] <- except sq ((diagonalNWOfSquare sq) &&& (upside (rankIndexOfSquare sq)))
     rayToSWFromSquarePC.[index] <- except sq ((diagonalNEOfSquare sq) &&& (downside (rankIndexOfSquare sq)))
     rayToSEFromSquarePC.[index] <- except sq ((diagonalNWOfSquare sq) &&& (downside (rankIndexOfSquare sq)))
+    
+    let f = fileOfSquare sq
+    let ri = rankIndexOfSquare sq
+    let fi = fileIndexOfSquare sq
+    let r = rankOfSquare sq
+
+    rayToNFromSquarePC.[index] <- except sq (chessShift ri 0 f) 
+    rayToSFromSquarePC.[index] <- except sq (chessShift (ri - 7) 0 f)
+    rayToEFromSquarePC.[index] <- except sq (chessShift 0 (fi) r)
+    rayToWFromSquarePC.[index] <- except sq (chessShift 0 (fi - 7) r)
+
+let inline rayToNFromSquare sq =
+    rayToNFromSquarePC.[lsb sq]
+
+let inline rayToSFromSquare sq =
+    rayToSFromSquarePC.[lsb sq]
+
+let inline rayToEFromSquare sq =
+    rayToEFromSquarePC.[lsb sq]
+    
+let inline rayToWFromSquare sq =
+    rayToWFromSquarePC.[lsb sq]
 
 let inline rayToNEFromSquare sq =
     rayToNEFromSquarePC.[lsb sq]

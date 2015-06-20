@@ -41,17 +41,18 @@ let knightsAttacks (knightsPositions : Bitboard) =
     cs 1 2 ||| cs  1 -2 ||| cs  2 1 ||| cs  2 -1 ||| cs -1 2 |||
                cs -1 -2 ||| cs -2 1 ||| cs -2 -1
 
-let rooksAttacks rooksPositions friends enemies =
-    let allpieces = friends ||| enemies
-    enumerateSquares rooksPositions
-    |> Seq.map(fun(sq) -> 
-                    rankOfSquare sq ||| fileOfSquare sq 
+let rookAttacks sq allpieces = 
+    rankOfSquare sq ||| fileOfSquare sq 
                     |> except sq
                     |> except (rayToNFromSquare (((rayToNFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
                     |> except (rayToEFromSquare (((rayToEFromSquare sq) &&& allpieces).lsb() |> sqFromIndex))
                     |> except (rayToSFromSquare (((rayToSFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
                     |> except (rayToWFromSquare (((rayToWFromSquare sq) &&& allpieces).msb() |> sqFromIndex))
-              )
+
+let rooksAttacks rooksPositions friends enemies =
+    let allpieces = friends ||| enemies
+    enumerateSquares rooksPositions
+    |> Seq.map(fun(sq) -> rookAttacks sq allpieces)
     |> Seq.fold (fun acc elem -> acc ||| elem) 0UL
 
 let bishopsAttacks bishopsPositions friends enemies =
