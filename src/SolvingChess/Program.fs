@@ -22,23 +22,24 @@ open MateFinder
 //                    SideToMove = White
 //}
 
-let startpos = {
+let startpos = { 
     EmptyBoard with 
-        WhiteKing = G1;
-        WhiteQueens = C2;
-        WhitePawns = B3 ||| F2 ||| G3 ||| H2;
-        WhiteBishops = B2 ||| G2;
-        WhiteRooks = C1 ||| D1;
+                    WhiteKing = G1;
+                    WhiteQueens = C2;
+                    WhitePawns = B3 ||| F2 ||| G3 ||| H2;
+                    WhiteBishops = B2 ||| G2;
+                    WhiteRooks = C1 ||| D1;
                 
-        BlackKing = F7;
-        BlackQueens = D8
-        BlackPawns = B7 ||| D5 ||| G7 ||| H6;
-        BlackBishops = E7 ||| C8;
-        BlackKnights = D7;
-        BlackRooks = A8 ||| E8;
+                    BlackKing = F7;
+                    BlackQueens = D8
+                    BlackPawns = B7 ||| D5 ||| G7 ||| H6;
+                    BlackBishops = E7 ||| C8;
+                    BlackKnights = D7;
+                    BlackRooks = A8 ||| E8;
 
-        SideToMove = White
+                    SideToMove = White    
 }
+
 
 let printmoves history =
     printfn "-----------------"
@@ -50,7 +51,8 @@ open Attacks
 open System.Diagnostics
 [<EntryPoint>]
 let main argv = 
-    //moves startpos |> Seq.iter(fun move -> printfn "%s" (move.ToString()))
+    //moves startpos |> Seq.iter(fun m -> printfn "%s" (m.ToString()))
+     
     let sw = Stopwatch()
     sw.Start()
 

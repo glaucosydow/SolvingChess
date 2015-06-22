@@ -47,7 +47,7 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
             match seed.P.SideToMove with
             | Black -> None
             | White ->
-                 //printfn "%s%s" (String.replicate (depth + 1) " ") (record.ToString())
+//                 printfn "%s%s" (String.replicate (depth + 1) " ") (record.ToString())
                  Some ([| record |])
         | None ->
             let alternatives = 
@@ -60,6 +60,7 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
                     if (index = alternatives.Length) then accum
                     else
                         let alternative = alternatives.[index]
+//                        printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())
                         let line = internalFindMate alternative (depth + 1) maxdepth
                         let local = match line with 
                                     | Some(x) -> Some(Array.append [| alternative |] x)
@@ -87,6 +88,7 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
                 let rec explore accum (enumerator:IEnumerator<Record>) (maxdepth) : Record[] option =
                     if enumerator.MoveNext() then
                         let move = enumerator.Current
+//                        printfn "%s%s" (String.replicate (depth + 1) " ") (move.ToString())
                         let line = internalFindMate move (depth + 1) maxdepth
                         let newaccum = 
                             match line, accum with 

@@ -153,31 +153,45 @@ let whiteMoves position : seq<Move> = seq {
 let blackKingMoves position inCheck=
     enumerateMoves King position.BlackKing ((kingAttacks position.BlackKing) &&& ~~~(whiteAttacks position inCheck) &&& ~~~(position.BlackPieces))
 
-let blackQueenMoves (position: Position) =
+let private fullBoard = rank 0 ||| rank 1 ||| rank 2 ||| rank 3 ||| rank 4 ||| rank 5 ||| rank 6 ||| rank 7
+
+let blackQueenFilteredMoves (position: Position) hot =
     let allpieces = position.BlackPieces ||| position.WhitePieces 
     enumerateSquares position.BlackQueens
-    |> Seq.map (fun(queen) -> enumerateMoves Queen queen ((queenAttacks queen allpieces)  &&& ~~~(position.BlackPieces)))
+    |> Seq.map (fun(queen) -> enumerateMoves Queen queen ((queenAttacks queen allpieces) &&& hot &&& ~~~(position.BlackPieces)))
+    |> Seq.concat
+
+let blackQueenMoves (position: Position) =
+    blackQueenFilteredMoves position fullBoard
+
+let blackRookFilteredMoves (position: Position) hot =
+    let allpieces = position.BlackPieces ||| position.WhitePieces     
+    enumerateSquares position.BlackRooks
+    |> Seq.map (fun(rook) -> enumerateMoves Rook rook ((rookAttacks rook allpieces) &&& hot &&& ~~~(position.BlackPieces)))
     |> Seq.concat
 
 let blackRookMoves (position: Position) =
-    let allpieces = position.BlackPieces ||| position.WhitePieces     
-    enumerateSquares position.BlackRooks
-    |> Seq.map (fun(rook) -> enumerateMoves Rook rook ((rookAttacks rook allpieces)  &&& ~~~(position.BlackPieces)))
+    blackRookFilteredMoves position fullBoard
+
+let blackBishopFilteredMoves (position: Position) hot =
+    let allpieces = position.BlackPieces ||| position.WhitePieces 
+    enumerateSquares position.BlackBishops
+    |> Seq.map (fun(bishop) -> enumerateMoves Bishop bishop ((bishopAttacks bishop allpieces) &&& hot &&& ~~~(position.BlackPieces)))
     |> Seq.concat
 
 let blackBishopMoves (position: Position) =
-    let allpieces = position.BlackPieces ||| position.WhitePieces 
-    enumerateSquares position.BlackBishops
-    |> Seq.map (fun(bishop) -> enumerateMoves Bishop bishop ((bishopAttacks bishop allpieces)  &&& ~~~(position.BlackPieces)))
+    blackBishopFilteredMoves position fullBoard
+
+let blackKnightsFilteredMoves (position : Position) hot =
+    enumerateSquares position.BlackKnights
+    |> Seq.map (fun(knight) -> enumerateMoves Knight knight ((knightAttacks knight) &&& hot &&& ~~~(position.BlackPieces)))
     |> Seq.concat
 
 let blackKnightsMoves (position : Position) =
-    enumerateSquares position.BlackKnights
-    |> Seq.map (fun(knight) -> enumerateMoves Knight knight ((knightAttacks knight) &&& ~~~(position.BlackPieces)))
-    |> Seq.concat
+    blackKnightsFilteredMoves position fullBoard
 
 let rank6 = rank 6
-let blackPawnMoves (position : Position) =
+let blackPawnFilteredMoves (position : Position) hot =
     enumerateSquares position.BlackPawns 
     |> Seq.map(fun(pawn) -> 
         let captures = (pawn.chessShift -1 -1 ||| pawn.chessShift -1 1) &&& position.WhitePieces
@@ -190,18 +204,47 @@ let blackPawnMoves (position : Position) =
             | _   -> (if (isSet pawn rank6) then pawn.chessShift -2 0 else 0UL) &&& ~~~position.AllPieces 
 
 
-        enumerateMoves Pawn pawn (captures ||| advance1 ||| advance2)
+        enumerateMoves Pawn pawn ((captures ||| advance1 ||| advance2) &&& hot)
        )
     |> Seq.concat
 
-let blackMoves position  = seq {
-    yield! blackQueenMoves position
-    yield! blackRookMoves position
-    yield! blackBishopMoves position
-    yield! blackKnightsMoves position
-    yield! blackPawnMoves position
+let blackPawnMoves (position : Position) =
+    blackPawnFilteredMoves position fullBoard
+
+let blackEscapes (position: Position) = seq {
     yield! blackKingMoves position true
+
+    let allpieces = position.AllPieces
+
+    let kn = (knightAttacks position.BlackKing) &&& position.WhiteKnights
+    let p = (whitePawnAttackers position.BlackKing) &&& position.WhitePawns
+    let bqP = (bishopAttacks position.BlackKing allpieces)
+    let bq = if (bqP &&& position.WhiteBishops) <> 0UL || (bqP &&& position.WhiteQueens) <> 0UL then bqP else 0UL
+    let rqP = (rookAttacks position.BlackKing allpieces)
+    let rq = if (rqP &&& position.WhiteRooks) <> 0UL || (rqP &&& position.WhiteQueens) <> 0UL then rqP else 0UL
+
+    let hot = kn ||| p ||| bq ||| rq
+    yield! blackPawnFilteredMoves position hot
+    yield! blackQueenFilteredMoves position hot
+    yield! blackBishopFilteredMoves position hot
+    yield! blackKnightsFilteredMoves position hot
+    yield! blackRookFilteredMoves position hot
 }
+
+let blackMoves position  = seq {
+    if isCheck position 
+    then 
+        yield! blackEscapes position
+    else
+        yield! blackQueenMoves position
+        yield! blackRookMoves position
+        yield! blackBishopMoves position
+        yield! blackKnightsMoves position
+        yield! blackPawnMoves position
+        yield! blackKingMoves position true
+}
+
+
 // ------------------------------
 
 let moves position  =
