@@ -40,7 +40,6 @@ let startpos = {
         SideToMove = White
 }
 
-
 let printmoves history =
     printfn "-----------------"
     history 

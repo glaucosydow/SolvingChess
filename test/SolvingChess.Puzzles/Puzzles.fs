@@ -55,6 +55,22 @@ let ``puzzle 02``() =
     Assert.AreEqual(expected, current)
 
 [<Test>]
+let ``puzzle x02``() =
+    let startpos = { 
+        EmptyBoard with 
+                    WhiteKing = F7;
+                    WhitePawns = F5 ||| G6;
+                    BlackKing = H8;
+                    BlackPawns = G7 ||| E5;
+    }
+
+    let mateline = (findMate startpos 0 7)
+    printfn "%d" numberOfCalls
+    let expected = [| p F5 F6; p G7 F6; p G6 G7; K H8 H7; p G7 G8; K H7 H6; Q G8 G6 |]
+    
+    Assert.AreEqual(expected, mateline.Value)
+
+[<Test>]
 let ``puzzle 03``() =
     let startpos = { 
         EmptyBoard with 
@@ -226,20 +242,34 @@ let ``puzzle 09``() =
     Assert.AreEqual(expected, current)
 
 [<Test>]
-let ``puzzle x02``() =
-    let startpos = { 
+let ``puzzle 10``() =
+    let startpos = {
         EmptyBoard with 
-                    WhiteKing = F7;
-                    WhitePawns = F5 ||| G6;
-                    BlackKing = H8;
-                    BlackPawns = G7 ||| E5;
+            WhiteKing = G1;
+            WhiteQueens = E3;
+            WhitePawns = B3 ||| C3 ||| D4 ||| G2 ||| H2;
+            WhiteBishops = E5;
+            WhiteRooks = H3;
+                
+            BlackKing = G8;
+            BlackQueens = D5
+            BlackPawns = A6 ||| F7 ||| F5 ||| G7 ||| G6;
+            BlackBishops = E7;
+            BlackRooks = F8;
+
+            SideToMove = White
     }
 
-    let mateline = (findMate startpos 0 7)
+    let mateline = (findMate startpos 0 15)
     printfn "%d" numberOfCalls
-    let expected = [| p F5 F6; p G7 F6; p G6 G7; K H8 H7; p G7 G8; K H7 H6; Q G8 G6 |]
-    
-    Assert.AreEqual(expected, mateline.Value)
+    Assert.True(mateline <> None)
+
+    let expected = [| R H3 H8; K G8 H8; Q E3 H6; K H8 G8; Q H6 G7 |]
+    let current = mateline.Value
+
+    Assert.AreEqual(expected, current)
+
+
 
 
 open Position
