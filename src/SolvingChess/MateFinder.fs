@@ -27,7 +27,8 @@ let mutable numberOfCalls = 0
 
 let rec private internalFindMate (seed: Record) depth maxdepth = 
     numberOfCalls <- if depth = 0 then 0 else numberOfCalls + 1
-       
+    if (numberOfCalls % 100) = 0 then printfn "%d plies" numberOfCalls
+      
     if depth < maxdepth then
 
         let continuations = 
