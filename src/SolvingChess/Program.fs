@@ -48,10 +48,11 @@ let printmoves history =
 
 open Check
 open Attacks
+open KingSafety
 open System.Diagnostics
 [<EntryPoint>]
 let main argv = 
-    //moves startpos |> Seq.iter(fun m -> printfn "%s" (m.ToString()))
+    //futures startpos |> Seq.iter(fun f -> printfn "%s  %d" (f.M.ToString()) (f.BlackRingRisk))
      
     let sw = Stopwatch()
     sw.Start()

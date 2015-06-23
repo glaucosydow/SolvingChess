@@ -258,7 +258,11 @@ let moves position  =
                     not (isKingUnderAttack position.SideToMove np)
                 ) 
 
-type Future = { M: Move; P: Position}
+open KingSafety
+type Future(m, p) = 
+    member x.M = m
+    member x.P = p
+    
 
 let futures position =
     let alternatives = match position.SideToMove with
@@ -266,6 +270,6 @@ let futures position =
                         | Black -> blackMoves position
     
     alternatives 
-    |> Seq.map(fun m -> {M=m; P=applyMove m position})
+    |> Seq.map(fun m -> Future(m, applyMove m position))
     |> Seq.where(fun f -> not (isKingUnderAttack position.SideToMove f.P))
    

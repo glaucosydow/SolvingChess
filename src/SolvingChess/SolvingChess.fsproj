@@ -55,6 +55,7 @@
     <Compile Include="Position.fs" />
     <Compile Include="Attacks.fs" />
     <Compile Include="Check.fs" />
+    <Compile Include="KingSafety.fs" />
     <Compile Include="Moves.fs" />
     <Compile Include="MateFinder.fs" />
     <Compile Include="Program.fs" />

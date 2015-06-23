@@ -15,7 +15,7 @@ type Record(m,p) =
     
     member x.hasResponses = x.Ms.Length > 0
     member x.check = chk
-    member x.withNoKingMoves = not (Array.exists (fun future -> future.M.Piece = King) x.Ms )
+    member x.withNoKingMoves = not (Array.exists (fun (future: Future) -> future.M.Piece = King) x.Ms )
     member x.checkMate = x.Ms.Length = 0 && chk
     override x.ToString() = x.M.ToString()
 
@@ -47,7 +47,7 @@ let rec private internalFindMate (seed: Record) alpha beta depth maxdepth =
             match seed.P.SideToMove with
             | Black -> None
             | White ->
-                 printfn "%s%s++ (ply %d)" (String.replicate (depth + 1) " ") (record.ToString()) (numberOfCalls)
+                 //printfn "%s%s++ (ply %d)" (String.replicate (depth + 1) " ") (record.ToString()) (numberOfCalls)
                  Some ([| record |])
         | None ->
             let alternatives = 
@@ -60,7 +60,7 @@ let rec private internalFindMate (seed: Record) alpha beta depth maxdepth =
                     if (index = alternatives.Length) then accum
                     else
                         let alternative = alternatives.[index]
-                        printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())
+                        //printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())
                         let line = internalFindMate alternative alpha beta (depth + 1) maxdepth
                         let local = match line with 
                                     | Some(x) -> Some(Array.append [| alternative |] x)
@@ -92,7 +92,7 @@ let rec private internalFindMate (seed: Record) alpha beta depth maxdepth =
                 let rec explore accum (enumerator:IEnumerator<Record>) (maxdepth) alpha beta : Record[] option =
                     if enumerator.MoveNext() then
                         let move = enumerator.Current
-                        printfn "%s%s" (String.replicate (depth + 1) " ") (move.ToString())
+                        //printfn "%s%s" (String.replicate (depth + 1) " ") (move.ToString())
                         let line = internalFindMate move alpha beta (depth + 1) maxdepth
                         let newaccum = 
                             match line, accum with 
@@ -123,10 +123,10 @@ let rec private internalFindMate (seed: Record) alpha beta depth maxdepth =
 
                 let blackKingArea = kingArea seed.P.BlackKing
 
+
                 let kaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) = a.M.To )
                 let nkaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) <> a.M.To )
                 
-                //e alternatives None
                 e    (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length = 1))  None
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 1)) 
                 |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length = 2)) 
