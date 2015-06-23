@@ -5,22 +5,22 @@ open BoardUnits
 open Position
 open Attacks
 
-let isBlackKingUnderAttack (position: Position) =
-    let allpieces = position.AllPieces
+let isBlackKingUnderAttack (position: Position) blackKingPosition =
+    let allpieces = position.AllPieces &&& (~~~position.BlackKing)
 
     let condition = 
-        ((knightAttacks         position.BlackKing) &&& position.WhiteKnights) <> 0UL ||
-        ((whitePawnAttackers    position.BlackKing) &&& position.WhitePawns) <> 0UL ||
-        ((kingAttacks           position.BlackKing) &&& position.WhiteKing) <> 0UL 
+        ((knightAttacks         blackKingPosition) &&& position.WhiteKnights) <> 0UL ||
+        ((whitePawnAttackers    blackKingPosition) &&& position.WhitePawns) <> 0UL ||
+        ((kingAttacks           blackKingPosition) &&& position.WhiteKing) <> 0UL 
 
     if condition 
     then true 
     else 
-        let ra = rookAttacks position.BlackKing allpieces
+        let ra = rookAttacks blackKingPosition allpieces
         if ((ra &&& position.WhiteRooks) <> 0UL || (ra &&& position.WhiteQueens) <> 0UL)
         then true
         else
-            let ba = bishopAttacks position.BlackKing allpieces
+            let ba = bishopAttacks blackKingPosition allpieces
             ((ba &&& position.WhiteBishops) <> 0UL || (ba &&& position.WhiteQueens) <> 0UL)
 
 let isWhiteKingUnderAttack (position: Position) =
@@ -45,7 +45,7 @@ let isWhiteKingUnderAttack (position: Position) =
 let isKingUnderAttack side position =
     match side with 
     | White -> position.WhiteKing <> 0UL && isWhiteKingUnderAttack position
-    | Black -> position.BlackKing <> 0UL && isBlackKingUnderAttack position
+    | Black -> position.BlackKing <> 0UL && isBlackKingUnderAttack position (position.BlackKing)
 
 let isCheck position = 
     isKingUnderAttack position.SideToMove position

@@ -25,7 +25,7 @@ open BitOperations
 
 let mutable numberOfCalls = 0
 
-let rec private internalFindMate (seed: Record) depth maxdepth = 
+let rec private internalFindMate (seed: Record) alpha beta depth maxdepth = 
     numberOfCalls <- if depth = 0 then 0 else numberOfCalls + 1
     if (numberOfCalls % 100) = 0 then printfn "%d plies" numberOfCalls
       
@@ -47,7 +47,7 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
             match seed.P.SideToMove with
             | Black -> None
             | White ->
-//                 printfn "%s%s" (String.replicate (depth + 1) " ") (record.ToString())
+                 printfn "%s%s++ (ply %d)" (String.replicate (depth + 1) " ") (record.ToString()) (numberOfCalls)
                  Some ([| record |])
         | None ->
             let alternatives = 
@@ -56,12 +56,12 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
 
             match seed.P.SideToMove with
             | Black ->
-                let rec explore accum index (alternatives: Record[]) =
+                let rec explore accum index (alternatives: Record[]) alpha beta =
                     if (index = alternatives.Length) then accum
                     else
                         let alternative = alternatives.[index]
-//                        printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())
-                        let line = internalFindMate alternative (depth + 1) maxdepth
+                        printfn "%s%s" (String.replicate (depth + 1) " ") (alternative.ToString())
+                        let line = internalFindMate alternative alpha beta (depth + 1) maxdepth
                         let local = match line with 
                                     | Some(x) -> Some(Array.append [| alternative |] x)
                                     | None -> None
@@ -69,7 +69,7 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
                         if local=None then
                             None
                         elif index = 0 then 
-                            explore local (index + 1) alternatives
+                            explore local (index + 1) alternatives alpha beta
                         else
                             let a = accum.Value;
                             let b = local.Value;
@@ -79,17 +79,21 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
                                                     elif a.Length < b.Length then b
                                                     else if ((Array.last a).P.score) > ((Array.last b).P.score) then b else a
                                                 )
-                                           
-                            explore newaccum (index + 1) alternatives
+                            
+                            let v = depth + newaccum.Value.Length
+                            let newalpha = max alpha v
+                            if (beta < newalpha)
+                            then newaccum
+                            else explore newaccum (index + 1) alternatives newalpha beta
 
-                explore None 0 alternatives
+                explore None 0 alternatives alpha beta
 
             | White -> 
-                let rec explore accum (enumerator:IEnumerator<Record>) (maxdepth) : Record[] option =
+                let rec explore accum (enumerator:IEnumerator<Record>) (maxdepth) alpha beta : Record[] option =
                     if enumerator.MoveNext() then
                         let move = enumerator.Current
-//                        printfn "%s%s" (String.replicate (depth + 1) " ") (move.ToString())
-                        let line = internalFindMate move (depth + 1) maxdepth
+                        printfn "%s%s" (String.replicate (depth + 1) " ") (move.ToString())
+                        let line = internalFindMate move alpha beta (depth + 1) maxdepth
                         let newaccum = 
                             match line, accum with 
                             | None, Some(y) -> Some(y)
@@ -102,15 +106,19 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
                                     else if ((Array.last rx).P.score) > ((Array.last y).P.score) then rx else y
                                 )
                             | None, None -> None
-
-                        explore newaccum enumerator (if newaccum = None then maxdepth else depth + newaccum.Value.Length)
+                        
+                        let v = if newaccum = None then beta else (depth + newaccum.Value.Length)
+                        let newbeta = min beta v
+                        if (newbeta < alpha)
+                        then newaccum
+                        else explore newaccum enumerator (if newaccum = None then maxdepth else depth + newaccum.Value.Length) alpha newbeta
                     else
                         accum
 
 
                 let e (a: IEnumerable<Record>) pre =
                     match pre with
-                    | None -> explore None (a.GetEnumerator()) maxdepth
+                    | None -> explore None (a.GetEnumerator()) maxdepth alpha beta
                     | Some(x) -> Some(x)
 
                 let blackKingArea = kingArea seed.P.BlackKing
@@ -118,6 +126,7 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
                 let kaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) = a.M.To )
                 let nkaAlternatives = alternatives |> Array.where(fun a -> (a.M.To &&& blackKingArea) <> a.M.To )
                 
+                //e alternatives None
                 e    (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length = 1))  None
                 |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 1)) 
                 |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length = 2)) 
@@ -131,7 +140,7 @@ let rec private internalFindMate (seed: Record) depth maxdepth =
         None
             
 let rec findMate position depth maxdepth = 
-    match internalFindMate (Record (NullMove, position)) depth maxdepth with
+    match internalFindMate (Record (NullMove, position)) 0 (maxdepth + 1)  depth maxdepth with
     | None -> None
     | Some(line) -> Some (line |> Array.map(fun record -> record.M) )
     
