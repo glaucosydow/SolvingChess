@@ -183,9 +183,10 @@ let inline sqToString sq =
 
 let rec enumerateSquares bitboard = seq {
     if bitboard <> 0UL then
-        let square = bitboard.lsb() |> sqFromIndex;
-        yield square
-        let remaining = (except square bitboard)
-        if remaining > 0UL then yield! enumerateSquares remaining
+        let lb = int64 bitboard
+        let square = lb &&& (-lb)           // isolate the rightmost bit
+        yield (uint64 square)
+        let remaining = lb &&& (lb - 1L)    // turn off the rightmost bit
+        if remaining <> 0L then yield! enumerateSquares (uint64 remaining)
 }
 
