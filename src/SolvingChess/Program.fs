@@ -25,17 +25,16 @@ open MateFinder
 let startpos = { 
     EmptyBoard with 
                     WhiteKing = G1;
-                    WhiteQueens = C2;
-                    WhitePawns = B3 ||| F2 ||| G3 ||| H2;
-                    WhiteBishops = B2 ||| G2;
-                    WhiteRooks = C1 ||| D1;
+                    WhiteQueens = D5;
+                    WhitePawns = A2 ||| D4 ||| F2 ||| G2 ||| H2;
+                    WhiteRooks = C1 ||| E1;
                 
-                    BlackKing = F7;
-                    BlackQueens = D8
-                    BlackPawns = B7 ||| D5 ||| G7 ||| H6;
-                    BlackBishops = E7 ||| C8;
-                    BlackKnights = D7;
-                    BlackRooks = A8 ||| E8;
+                    BlackKing = C7;
+                    BlackQueens = F6
+                    BlackPawns = A6 ||| A7 ||| G6 ||| H7;
+                    BlackBishops = G7;
+                    BlackKnights = C6;
+                    BlackRooks = A8 ||| H8;
 
                     SideToMove = White    
 }
@@ -57,7 +56,7 @@ let main argv =
     let sw = Stopwatch()
     sw.Start()
 
-    let mateline = (findMate startpos 0 8)
+    let mateline = (findMate startpos 0 10)
     match mateline with 
     | Some(line) -> printmoves line
     | None -> printfn "There is no answer"

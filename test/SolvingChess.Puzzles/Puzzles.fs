@@ -270,6 +270,34 @@ let ``puzzle 10``() =
     Assert.AreEqual(expected, current)
 
 
+[<Test>]
+let ``puzzle 11``() = 
+    let startpos = {
+        EmptyBoard with 
+            WhiteKing = G1;
+            WhiteQueens = D5;
+            WhitePawns = A2 ||| D4 ||| F2 ||| G2 ||| H2;
+            WhiteRooks = C1 ||| E1;
+                
+            BlackKing = C7;
+            BlackQueens = F6
+            BlackPawns = A6 ||| A7 ||| G6 ||| H7;
+            BlackBishops = G7;
+            BlackKnights = C6;
+            BlackRooks = A8 ||| H8;
+
+            SideToMove = White    
+    }
+
+    let mateline = (findMate startpos 0 10)
+    printfn "%d" numberOfCalls
+    Assert.True(mateline <> None)
+
+    let expected = [| R E1 E7; Q F6 E7; Q D5 C6; K C7 D8; Q C6 A8; K D8 D7; Q A8 C6 ; K D7 D8; Q C6 C8 |]
+    let current = mateline.Value
+
+    Assert.AreEqual(expected, current)
+
 
 
 open Position
