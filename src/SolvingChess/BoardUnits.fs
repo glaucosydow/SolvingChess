@@ -182,9 +182,9 @@ let inline sqToString sq =
     sprintf "%c%d" [| 'a'; 'b'; 'c'; 'd'; 'e'; 'f'; 'g'; 'h'|].[fileIndexOfSquare sq] ( (rankIndexOfSquare sq) + 1)
 
 let enumerateSquares (bitboard: uint64) = 
-    bitboard
-    |> Seq.unfold(fun x -> if x = 0UL then None else Some(x, x &&& (x - 1UL)))
-    |> Seq.map(fun (x)-> y = int64 x, uint64 (y &&& (-y)))
+    int64 bitboard
+    |> Seq.unfold(fun x -> if x = 0L then None else Some(x, x &&& (x - 1L)))
+    |> Seq.map(fun x -> uint64 (x &&& (-x)))
 //
 //let rec enumerateSquares bitboard = seq {
 //    if bitboard <> 0UL then
