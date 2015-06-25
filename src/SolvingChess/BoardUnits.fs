@@ -181,17 +181,17 @@ let inline rayToSEFromSquare sq =
 let inline sqToString sq =
     sprintf "%c%d" [| 'a'; 'b'; 'c'; 'd'; 'e'; 'f'; 'g'; 'h'|].[fileIndexOfSquare sq] ( (rankIndexOfSquare sq) + 1)
 
-//let enumerateSquares (bitboard: uint64) = 
-//    int64 bitboard
-//    |> Seq.unfold(fun x -> if x = 0L then None else Some(x, x &&& (x - 1L)))
-//    |> Seq.map(fun x -> uint64 (x &&& (-x)))
-
-let rec enumerateSquares bitboard = seq {
-    if bitboard <> 0UL then
-        let lb = int64 bitboard
-        let square = lb &&& (-lb)           // isolate the rightmost bit
-        yield (uint64 square)
-        let remaining = lb &&& (lb - 1L)    // turn off the rightmost bit
-        if remaining <> 0L then yield! enumerateSquares (uint64 remaining)
-}
+let enumerateSquares (bitboard: uint64) = 
+    bitboard
+    |> Seq.unfold(fun x -> if x = 0UL then None else Some(x, x &&& (x - 1UL)))
+    |> Seq.map(fun (x)-> y = int64 x, uint64 (y &&& (-y)))
+//
+//let rec enumerateSquares bitboard = seq {
+//    if bitboard <> 0UL then
+//        let lb = int64 bitboard
+//        let square = lb &&& (-lb)           // isolate the rightmost bit
+//        yield (uint64 square)
+//        let remaining = lb &&& (lb - 1L)    // turn off the rightmost bit
+//        if remaining <> 0L then yield! enumerateSquares (uint64 remaining)
+//}
 
