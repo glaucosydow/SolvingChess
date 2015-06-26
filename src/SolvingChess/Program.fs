@@ -24,17 +24,19 @@ open MateFinder
 
 let startpos = { 
     EmptyBoard with 
-                    WhiteKing = G1;
-                    WhiteQueens = D5;
-                    WhitePawns = A2 ||| D4 ||| F2 ||| G2 ||| H2;
-                    WhiteRooks = C1 ||| E1;
+                    WhiteKing = E1;
+                    WhiteQueens = D2;
+                    WhitePawns = A2 ||| C3 ||| D5 ||| F2 ||| G2;
+                    WhiteBishops = C4
+                    WhiteKnights = F3
+                    WhiteRooks = A1 ||| H1;
                 
-                    BlackKing = C7;
-                    BlackQueens = F6
-                    BlackPawns = A6 ||| A7 ||| G6 ||| H7;
-                    BlackBishops = G7;
-                    BlackKnights = C6;
-                    BlackRooks = A8 ||| H8;
+                    BlackKing = G8;
+                    BlackQueens = A5
+                    BlackPawns = A7 ||| B5 ||| C5 ||| G6 ||| H7;
+                    BlackBishops = E6;
+                    BlackKnights = B8;
+                    BlackRooks = A8 ||| D8;
 
                     SideToMove = White    
 }
@@ -51,12 +53,12 @@ open KingSafety
 open System.Diagnostics
 [<EntryPoint>]
 let main argv = 
-    //futures startpos |> Seq.iter(fun f -> printfn "%s  %d" (f.M.ToString()) (f.BlackRingRisk))
+    futures startpos |> Seq.iter(fun f -> printfn "%s" (f.M.ToString()))
      
     let sw = Stopwatch()
     sw.Start()
 
-    let mateline = (findMate startpos 0 10)
+    let mateline = (findMate startpos 0 20)
     match mateline with 
     | Some(line) -> printmoves line
     | None -> printfn "There is no answer"
