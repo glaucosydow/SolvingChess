@@ -27,7 +27,7 @@ let mutable numberOfCalls = 0
 
 let rec private internalFindMate (seed: Record) alpha beta depth maxdepth = 
     numberOfCalls <- if depth = 0 then 0 else numberOfCalls + 1
-    if (numberOfCalls % 100) = 0 then printfn "%d plies" numberOfCalls
+    if (numberOfCalls % 100) = 0 then printfn "%d plies (%d, %d, %d)" numberOfCalls alpha beta maxdepth
       
     if depth < maxdepth then
 
@@ -107,6 +107,10 @@ let rec private internalFindMate (seed: Record) alpha beta depth maxdepth =
                                 )
                             | None, None -> None
                         
+//                        if (depth = 0 && newaccum <> None)
+//                        then 
+//                            printfn "boom!"
+
                         let v = if newaccum = None then beta else (depth + newaccum.Value.Length)
                         let newbeta = min beta v
                         if (newbeta < alpha)
@@ -144,6 +148,8 @@ let rec private internalFindMate (seed: Record) alpha beta depth maxdepth =
                     |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && a.check))
                     |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
                     |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
+                    |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && not a.withNoKingMoves && (isSet a.M.To seed.P.BlackPieces)))
+                    |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && not a.withNoKingMoves && (isSet a.M.To seed.P.BlackPieces)))
                 
     else
         None

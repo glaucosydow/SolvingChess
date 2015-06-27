@@ -53,7 +53,7 @@ open KingSafety
 open System.Diagnostics
 [<EntryPoint>]
 let main argv = 
-    futures startpos |> Seq.iter(fun f -> printfn "%s" (f.M.ToString()))
+//    futures startpos |> Seq.iter(fun f -> printfn "%s" (f.M.ToString()))
      
     let sw = Stopwatch()
     sw.Start()
