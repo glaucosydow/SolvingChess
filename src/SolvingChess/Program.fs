@@ -22,25 +22,39 @@ open MateFinder
 //                    SideToMove = White
 //}
 
+//let startpos = { 
+//    EmptyBoard with 
+//                    WhiteKing = E1;
+//                    WhiteQueens = D2;
+//                    WhitePawns = A2 ||| C3 ||| D5 ||| F2 ||| G2;
+//                    WhiteBishops = C4
+//                    WhiteKnights = F3
+//                    WhiteRooks = A1 ||| H1;
+//                
+//                    BlackKing = G8;
+//                    BlackQueens = A5
+//                    BlackPawns = A7 ||| B5 ||| C5 ||| G6 ||| H7;
+//                    BlackBishops = E6;
+//                    BlackKnights = B8;
+//                    BlackRooks = A8 ||| D8;
+//
+//                    SideToMove = White    
+//}
+
 let startpos = { 
     EmptyBoard with 
-                    WhiteKing = E1;
-                    WhiteQueens = D2;
-                    WhitePawns = A2 ||| C3 ||| D5 ||| F2 ||| G2;
-                    WhiteBishops = C4
-                    WhiteKnights = F3
-                    WhiteRooks = A1 ||| H1;
+                    WhiteKing = H2;
+                    WhitePawns = F4 ||| G2;
+                    WhiteBishops = B4
+                    WhiteRooks = G5;
                 
-                    BlackKing = G8;
-                    BlackQueens = A5
-                    BlackPawns = A7 ||| B5 ||| C5 ||| G6 ||| H7;
-                    BlackBishops = E6;
-                    BlackKnights = B8;
-                    BlackRooks = A8 ||| D8;
+                    BlackKing = H4;
+                    BlackPawns = A6 ||| E6 ||| F5;
+                    BlackBishops = D5;
+                    BlackRooks = E2;
 
                     SideToMove = White    
 }
-
 
 let printmoves history =
     printfn "-----------------"
@@ -58,7 +72,7 @@ let main argv =
     let sw = Stopwatch()
     sw.Start()
 
-    let mateline = (findMate startpos 0 20)
+    let mateline = (findMate startpos 0 4)
     match mateline with 
     | Some(line) -> printmoves line
     | None -> printfn "There is no answer"
