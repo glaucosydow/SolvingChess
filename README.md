@@ -351,4 +351,35 @@ let ``puzzle 12``() =
 ````
 
 
+![puzzle #14](/assets/14.jpg)
+````fsharp
+[<Test>]
+let ``puzzle 14``() = 
+    let startpos = { 
+        EmptyBoard with 
+            WhiteKing = H2;
+            WhitePawns = F4 ||| G2;
+            WhiteBishops = B4
+            WhiteRooks = G5;
+                
+            BlackKing = H4;
+            BlackPawns = A6 ||| E6 ||| F5;
+            BlackBishops = D5;
+            BlackRooks = E2;
+
+            SideToMove = White    
+    }
+
+    let mateline = (findMate startpos 0 10)
+    printfn "%d" numberOfCalls
+    Assert.True(mateline <> None)
+
+    let expected = [| B B4 E1; R E2 E1; p G2 G3 |]
+    let current = mateline.Value
+
+    Assert.AreEqual(expected, current)
+
+````
+
+
 Feel free to suggest code improvements. I will work to make it better. ;)
