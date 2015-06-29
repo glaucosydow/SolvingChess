@@ -1,5 +1,6 @@
 ﻿module MateFinder
 
+open BoardUnits
 open Position
 open Attacks
 open Moves
@@ -140,16 +141,21 @@ let rec private internalFindMate (seed: Record) alpha beta depth maxdepth =
                     |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length > 2 && a.check))
                     |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && a.check))
                 else
-                    e    (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length = 1))  None
-                    |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 1)) 
-                    |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length = 2)) 
-                    |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 2)) 
-                    |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length > 2 && a.check))
-                    |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && a.check))
-                    |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
-                    |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
-                    |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && not a.withNoKingMoves && (isSet a.M.To seed.P.BlackPieces)))
-                    |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && not a.withNoKingMoves && (isSet a.M.To seed.P.BlackPieces)))
+                    let response  = e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length = 1))  None
+                                    |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 1)) 
+                                    |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length = 2)) 
+                                    |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length = 2)) 
+                                    |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length > 2 && a.check))
+                                    |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && a.check))
+                                    |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
+                                    |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && a.withNoKingMoves))
+                                    |> e (kaAlternatives  |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && not a.withNoKingMoves && (isSet a.M.To seed.P.BlackPieces)))
+                                    |> e (nkaAlternatives |> Seq.where(fun a -> a.Ms.Length > 2 && (not a.check) && not a.withNoKingMoves && (isSet a.M.To seed.P.BlackPieces)))
+
+                    (* if anything else fails, move the king to release the rook *)
+                    match response with
+                    | None when ((rankOfSquare seed.P.BlackKing) &&& seed.P.WhiteRooks) <> 0UL -> e (alternatives |> Seq.where(fun a -> a.M.Piece = King)) None
+                    | _ -> response
                 
     else
         None

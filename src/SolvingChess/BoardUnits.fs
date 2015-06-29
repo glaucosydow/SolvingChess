@@ -182,11 +182,8 @@ let inline sqToString sq =
     sprintf "%c%d" [| 'a'; 'b'; 'c'; 'd'; 'e'; 'f'; 'g'; 'h'|].[fileIndexOfSquare sq] ( (rankIndexOfSquare sq) + 1)
 
 
-let rec enumerateSquares bits = [|
-    if bits <> 0UL
-    then
-        let x = int64 bits
-        yield uint64 (x &&& -x)
-        yield! enumerateSquares (uint64 (x &&& (x - 1L)))
+let rec enumerateSquares (x: uint64) = [|
+    if x<>0UL then  
+        yield x &&& (~~~x+1UL)
+        yield! enumerateSquares(x &&& (x - 1UL)) 
 |]
-

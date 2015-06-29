@@ -272,4 +272,5 @@ let futures position =
     alternatives 
     |> Seq.map(fun m -> Future(m, applyMove m position))
     |> Seq.where(fun f -> not (isKingUnderAttack position.SideToMove f.P))
-   
+
+    

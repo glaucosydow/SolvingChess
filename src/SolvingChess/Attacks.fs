@@ -10,6 +10,7 @@ let karea = Array.zeroCreate<Bitboard> 64
 let knightAttacksPC =   Array.zeroCreate<Bitboard> 64
 let whitePawnAttackersPC = Array.zeroCreate<Bitboard> 64
 let blackPawnAttackersPC = Array.zeroCreate<Bitboard> 64
+let whiteKingAdvancesPC = Array.zeroCreate<Bitboard> 64
 
 for i = 0 to 63 do
     let s = sqFromIndex i
@@ -19,6 +20,7 @@ for i = 0 to 63 do
                  cs  1 -1 s||| cs  1 0 s ||| cs  1 1 s 
     let a = cs  -1 0 (ka.[i]) ||| cs  1 0 (ka.[i])
     karea.[i] <- cs  0 -1 a ||| cs 0 1 a
+    whiteKingAdvancesPC.[i] <- cs 1 -1 s ||| cs 1 0 s ||| cs 1 1 s
 
     knightAttacksPC.[i] <- cs 1 2 s ||| cs  1 -2 s ||| cs  2 1 s||| cs  2 -1 s||| cs -1 2 s |||
                cs -1 -2 s ||| cs -2 1 s ||| cs -2 -1 s
@@ -37,6 +39,9 @@ let inline kingAttacks (kingPosition : Bitboard) =
 
 let inline kingArea (kingPosition: Bitboard) =
     karea.[lsb kingPosition]
+
+let inline whiteKingAdvances kingPosition = 
+    whiteKingAdvancesPC.[lsb kingPosition]
 
 let whitePawnsAttacks (whitePawnsPositions : Bitboard) =
     (chessShift  1 -1 whitePawnsPositions) ||| (chessShift 1 1 whitePawnsPositions)
